@@ -10,6 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = { "me.efraimgentil.controller"  } )
+@ComponentScan(basePackages = { "me.efraimgentil.controller" } )
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
 }

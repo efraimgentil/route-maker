@@ -1,9 +1,13 @@
 package me.efraimgentil.controller;
 
 import me.efraimgentil.model.Driver;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import me.efraimgentil.validator.DriverValidator;
+import me.efraimgentil.validator.InvalidaModelException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,18 +17,24 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = { "/" })
-public class DriverController {
+public class DriverController  {
 
+  @Autowired
+  DriverValidator validator;
 
+  @InitBinder
+  public void initBinder(WebDataBinder binder){
+    binder.setValidator( validator );
+  }
 
   @RequestMapping(value = { "/" , "" })
   public List<Driver> drivers(){
     return Collections.emptyList();
   }
 
-  public Driver insert( @RequestBody Driver driver){
-
-
+  @RequestMapping(value = { "/" , "" } , method = RequestMethod.POST )
+  public Driver insert( @RequestBody @Validated Driver driver , BindingResult result){
+    if(result.hasErrors()) throw new InvalidaModelException( result );
     return driver;
   }
 
