@@ -1,6 +1,7 @@
 package me.efraimgentil.controller;
 
 import me.efraimgentil.model.Driver;
+import me.efraimgentil.service.DriverService;
 import me.efraimgentil.validator.DriverValidator;
 import me.efraimgentil.validator.InvalidaModelException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class DriverController  {
 
   @Autowired
   DriverValidator validator;
+  @Autowired
+  DriverService driverService;
 
   @InitBinder
   public void initBinder(WebDataBinder binder){
@@ -29,13 +32,13 @@ public class DriverController  {
 
   @RequestMapping(value = { "/" , "" })
   public List<Driver> drivers(){
-    return Collections.emptyList();
+    return driverService.drivers();
   }
 
   @RequestMapping(value = { "/" , "" } , method = RequestMethod.POST )
   public Driver insert( @RequestBody @Validated Driver driver , BindingResult result){
     if(result.hasErrors()) throw new InvalidaModelException( result );
-    return driver;
+    return driverService.insert( driver );
   }
 
 }

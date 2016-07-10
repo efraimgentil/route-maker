@@ -1,6 +1,7 @@
 package me.efraimgentil.validator;
 
 import me.efraimgentil.model.Driver;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -10,6 +11,7 @@ import org.springframework.validation.Validator;
  * Created by efraimgentil<efraimgentil@gmail.com> on 10/07/16.
  */
 @Component
+@Lazy(true)
 public class DriverValidator implements Validator {
 
   @Override

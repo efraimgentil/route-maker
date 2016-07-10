@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Configuration
-@ComponentScan(basePackages = {  "me.efraimgentil.validator"  })
+@ComponentScan(basePackages = {  "me.efraimgentil.validator" , "me.efraimgentil.service"  })
 public class SpringConfig {
 
 
