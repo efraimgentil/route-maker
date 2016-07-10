@@ -1,6 +1,7 @@
 package me.efraimgentil.controller;
 
-import me.efraimgentil.validator.InvalidaModelException;
+import me.efraimgentil.exception.InvalidaModelException;
+import me.efraimgentil.exception.NotFoundException;
 import me.efraimgentil.validator.ValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -34,6 +35,15 @@ public class CustomControllerAdivise {
     for(FieldError fr : fieldErrors){
       validationResults.add(new ValidationResult( fr.getField() , getMessage(fr , null)));
     }
+    return validationResults;
+  }
+
+  @ExceptionHandler(NotFoundException.class)
+  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+  @ResponseBody
+  public List<ValidationResult> handleInvalidModel( NotFoundException nne ){
+    List<ValidationResult> validationResults = new ArrayList<>();
+    validationResults.add( new ValidationResult( "global" , messageSource.getMessage("record.notfound", new Object[]{}, null)  ) );
     return validationResults;
   }
 

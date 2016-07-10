@@ -1,5 +1,6 @@
 package me.efraimgentil.service;
 
+import me.efraimgentil.exception.NotFoundException;
 import me.efraimgentil.model.Driver;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,26 @@ public class DriverService {
     return new ArrayList<>( drivers );
   }
 
-  public Driver insert(Driver driver){
+  public Driver create(Driver driver){
     driver.setId( ids.incrementAndGet() );
     drivers.add(driver);
     return driver;
   }
+
+  public Driver update(Driver driver) {
+    int indexOf = drivers.indexOf(driver);
+    if(indexOf < 0) throw new NotFoundException();
+    drivers.set( indexOf , driver );
+    return driver;
+  }
+
+  public Driver delete(Integer id){
+    int indexOf = drivers.indexOf(new Driver( id ));
+    if(indexOf < 0) throw new NotFoundException();
+    Driver driver = drivers.get(indexOf);
+    drivers.remove( indexOf );
+    return driver;
+  }
+
 
 }

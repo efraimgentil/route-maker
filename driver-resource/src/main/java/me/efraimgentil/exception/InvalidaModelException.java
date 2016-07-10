@@ -1,4 +1,4 @@
-package me.efraimgentil.validator;
+package me.efraimgentil.exception;
 
 import org.springframework.validation.BindingResult;
 

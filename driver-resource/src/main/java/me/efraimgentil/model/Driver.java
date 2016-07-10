@@ -11,6 +11,10 @@ public class Driver {
   public Driver() {
   }
 
+  public Driver(Integer id) {
+    this.id = id;
+  }
+
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("Driver{");
@@ -18,6 +22,20 @@ public class Driver {
     sb.append(", name='").append(name).append('\'');
     sb.append('}');
     return sb.toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Driver driver = (Driver) o;
+    if (id != null ? !id.equals(driver.id) : driver.id != null) return false;
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return id != null ? id.hashCode() : 0;
   }
 
   public Integer getId() {

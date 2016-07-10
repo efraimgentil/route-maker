@@ -3,14 +3,13 @@ package me.efraimgentil.controller;
 import me.efraimgentil.model.Driver;
 import me.efraimgentil.service.DriverService;
 import me.efraimgentil.validator.DriverValidator;
-import me.efraimgentil.validator.InvalidaModelException;
+import me.efraimgentil.exception.InvalidaModelException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,7 +37,19 @@ public class DriverController  {
   @RequestMapping(value = { "/" , "" } , method = RequestMethod.POST )
   public Driver insert( @RequestBody @Validated Driver driver , BindingResult result){
     if(result.hasErrors()) throw new InvalidaModelException( result );
-    return driverService.insert( driver );
+    return driverService.create(driver);
   }
+
+  @RequestMapping(value = { "/" , "" } , method = RequestMethod.PUT )
+  public Driver update( @RequestBody @Validated Driver driver , BindingResult result){
+    if(result.hasErrors()) throw new InvalidaModelException( result );
+    return driverService.update(driver);
+  }
+
+  @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.DELETE )
+  public Driver delete( @PathVariable("id") Integer id ){
+    return driverService.delete(id);
+  }
+
 
 }
