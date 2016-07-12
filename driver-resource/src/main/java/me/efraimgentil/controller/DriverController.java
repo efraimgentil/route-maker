@@ -29,9 +29,15 @@ public class DriverController  {
     binder.setValidator( validator );
   }
 
-  @RequestMapping(value = { "/" , "" })
+  @RequestMapping(value = { "/" , "" } , method =  RequestMethod.GET)
   public List<Driver> drivers(){
     return driverService.drivers();
+  }
+
+  @RequestMapping(value = { "/" , "" } , method = RequestMethod.GET)
+  public Driver driver(@PathVariable("id") Integer id ){
+
+    return driverService.get(id);
   }
 
   @RequestMapping(value = { "/" , "" } , method = RequestMethod.POST )
@@ -40,8 +46,8 @@ public class DriverController  {
     return driverService.create(driver);
   }
 
-  @RequestMapping(value = { "/" , "" } , method = RequestMethod.PUT )
-  public Driver update( @RequestBody @Validated Driver driver , BindingResult result){
+  @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.PUT )
+  public Driver update( @PathVariable("id") Integer id,  @RequestBody @Validated Driver driver , BindingResult result){
     if(result.hasErrors()) throw new InvalidaModelException( result );
     return driverService.update(driver);
   }

@@ -23,6 +23,12 @@ public class DriverService {
     return new ArrayList<>( drivers );
   }
 
+  public Driver get(Integer id) {
+    int indexOf = drivers.indexOf(new Driver( id ));
+    if(indexOf < 0) throw new NotFoundException();
+    return drivers.get(indexOf );
+  }
+
   public Driver create(Driver driver){
     driver.setId( ids.incrementAndGet() );
     drivers.add(driver);

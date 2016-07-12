@@ -8,6 +8,9 @@ app.config( function( $routeProvider , $locationProvider) {
     .when('/' , {
       templateUrl: 'app/view/home.html',
     })
+    .when('/driver', {
+      templateUrl: 'app/view/driver/list.html',
+    })
     .when('/user', {
       templateUrl: 'app/view/user/user-list.html',
     })
