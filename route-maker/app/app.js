@@ -1,6 +1,8 @@
 var moduleName = "rm";
 var app = angular.module( moduleName , ["ngResource", "ngRoute" ]);
 app.constant("$authorizationResourceUrl", "http://localhost:8080/ws");
+app.constant("DriverResourceUrl", "http://localhost:8080/:id");
+
 
 app.config( function( $routeProvider , $locationProvider) {
 
@@ -10,6 +12,15 @@ app.config( function( $routeProvider , $locationProvider) {
     })
     .when('/driver', {
       templateUrl: 'app/view/driver/list.html',
+      controller: "DriverListController"
+    })
+    .when('/driver/new', {
+      templateUrl: 'app/view/driver/form.html',
+      controller: "DriverFormController"
+    })
+    .when('/driver/:id', {
+      templateUrl: 'app/view/driver/form.html',
+      controller: "DriverFormController"
     })
     .when('/user', {
       templateUrl: 'app/view/user/user-list.html',
