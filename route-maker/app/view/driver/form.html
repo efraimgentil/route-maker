@@ -1,12 +1,8 @@
 <div ng-init="init()">
 
-  <form name="form" ng-submit="save()" novalidate="novalidate">
+  <page-title-directive title="{{driver.id ? 'Edit' : 'New'}} Driver" ></page-title-directive>
 
-    <div class="row">
-      <div class="col-sm-6 col-xs-12">
-        <h1>{{driver.id ? 'Edit' : 'New'}} Driver</h1>
-      </div>
-    </div>
+  <form name="form" ng-submit="save()" novalidate="novalidate">
 
     <div class="form-group">
       <label>Name</label>
