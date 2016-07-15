@@ -2,6 +2,8 @@ package me.efraimgentil.service;
 
 import me.efraimgentil.config.DatabaseConfig;
 import me.efraimgentil.config.SpringConfig;
+import me.efraimgentil.model.Location;
+import me.efraimgentil.model.Point;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.postgis.PGgeometry;
@@ -24,12 +26,15 @@ public class LocationServiceIT {
 
   @Autowired
   DataSource dataSource;
+
+  @Autowired
+  LocationService locationService;
+
   @Test
   public void does() throws SQLException {
     try(Connection conn = dataSource.getConnection()){
       ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM public.location");
       while(rs.next()){
-
         System.out.println( rs.getObject("point") );
         PGgeometry geom = (PGgeometry)rs.getObject("point");
         System.out.println(geom.toString());
@@ -37,10 +42,19 @@ public class LocationServiceIT {
         System.out.println(geom.getType());
         System.out.println(geom.getGeoType());
         System.out.println(geom.getGeometry());
-
-
       }
     }
+  }
+
+
+  @Test
+  public void doesInsertANewLocation(){
+    Location l = new Location();
+    l.setName("Home");
+    l.setPoint( new Point( 1.0 , 1.0 ) );
+
+    locationService.create( l );
+
   }
 
 }

@@ -4,6 +4,8 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.util.ResourceBundle;
@@ -26,16 +28,22 @@ public class DatabaseConfig {
   public DataSource dataSource( @Qualifier("database") ResourceBundle env ) {
     HikariDataSource ds = new HikariDataSource();
     ds.setDriverClassName("org.postgresql.Driver");
-    ds.setJdbcUrl(  env.getString("pg.url"));
-    ds.setUsername( env.getString("pg.username"));
-    ds.setPassword( env.getString("pg.password") );
-    ds.setMaximumPoolSize( 5 );
-    ds.setMinimumIdle( 0 );
-    ds.setIdleTimeout( 1000 * 60 * 5   ); // 5 minutes
-    ds.setMaxLifetime( 1000 * 60 * 15  ); // 15 minutes
+    ds.setJdbcUrl(env.getString("pg.url"));
+    ds.setUsername(env.getString("pg.username"));
+    ds.setPassword(env.getString("pg.password"));
+    ds.setMaximumPoolSize(5);
+    ds.setMinimumIdle(0);
+    ds.setIdleTimeout(1000 * 60 * 5); // 5 minutes
+    ds.setMaxLifetime(1000 * 60 * 15); // 15 minutes
     ds.setValidationTimeout( 1000 * 10 ); // 10 seconds
     ds.setConnectionTestQuery(env.getString("pg.testQuery"));
     return ds;
   }
+
+  @Bean
+  public JdbcTemplate jdbcTemplate(DataSource ds){
+    return new JdbcTemplate( ds );
+  }
+
 
 }

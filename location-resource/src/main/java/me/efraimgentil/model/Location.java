@@ -1,6 +1,7 @@
 package me.efraimgentil.model;
 
 import org.postgis.PGgeometry;
+import org.postgresql.geometric.PGpoint;
 
 /**
  * Created by efraimgentil<efraimgentil@gmail.com> on 09/07/16.
@@ -9,7 +10,8 @@ public class Location {
 
   private Integer id;
   private String name;
-  private PGgeometry point;
+  private Point point;
+  private PGgeometry geom;
 
   public Location() {
   }
@@ -53,11 +55,20 @@ public class Location {
   public void setName(String name) {
     this.name = name;
   }
-  public PGgeometry getPoint() {
-    return point;
-  }
-  public void setPoint(PGgeometry point) {
-    this.point = point;
+
+  public PGgeometry getGeom() {
+    return geom;
   }
 
+  public void setGeom(PGgeometry geom) {
+    this.geom = geom;
+  }
+
+  public Point getPoint() {
+    return point;
+  }
+
+  public void setPoint(Point point) {
+    this.point = point;
+  }
 }

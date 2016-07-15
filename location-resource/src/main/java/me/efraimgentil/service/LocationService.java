@@ -2,7 +2,11 @@ package me.efraimgentil.service;
 
 import me.efraimgentil.exception.NotFoundException;
 import me.efraimgentil.model.Location;
+import org.postgis.PGgeometry;
+import org.postgis.Point;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,9 +20,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Lazy(true)
 public class LocationService {
 
-  private AtomicInteger ids = new AtomicInteger(0);
-  private static List<Location> drivers = new ArrayList<>();
+  @Autowired
+  JdbcTemplate jdbcTemplate;
 
+  /*
   public List<Location> drivers(){
     return new ArrayList<>( drivers );
   }
@@ -28,14 +33,15 @@ public class LocationService {
     if(indexOf < 0) throw new NotFoundException();
     return drivers.get(indexOf );
   }
+  */
 
   public Location create(Location driver){
-    driver.setId( ids.incrementAndGet() );
-    drivers.add(driver);
+    jdbcTemplate.update("INSERT INTO public.location ( name , point  ) VALUES ( ? , GeomFromEWKT(?) )"
+            , driver.getName(), driver.getPoint().toGeom() );
     return driver;
   }
 
-  public Location update(Location driver) {
+  /*public Location update(Location driver) {
     int indexOf = drivers.indexOf(driver);
     if(indexOf < 0) throw new NotFoundException();
     drivers.set( indexOf , driver );
@@ -48,7 +54,7 @@ public class LocationService {
     Location driver = drivers.get(indexOf);
     drivers.remove( indexOf );
     return driver;
-  }
+  }*/
 
 
 }

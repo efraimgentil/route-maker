@@ -27,17 +27,18 @@ public class LocationController {
   @InitBinder
   public void initBinder(WebDataBinder binder){
     binder.setValidator( validator );
+
   }
 
   @RequestMapping(value = { "/" , "" } , method =  RequestMethod.GET)
   public List<Location> drivers(){
-    return driverService.drivers();
+    return null;
   }
 
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.GET)
   public Location driver(@PathVariable("id") Integer id ){
 
-    return driverService.get(id);
+    return null; //driverService.get(id);
   }
 
   @RequestMapping(value = { "/" , "" } , method = RequestMethod.POST )
@@ -49,12 +50,13 @@ public class LocationController {
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.PUT )
   public Location update( @PathVariable("id") Integer id,  @RequestBody @Validated Location driver , BindingResult result){
     if(result.hasErrors()) throw new InvalidaModelException( result );
-    return driverService.update(driver);
+    return null; //driverService.update(driver);
   }
 
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.DELETE )
   public Location delete( @PathVariable("id") Integer id ){
-    return driverService.delete(id);
+
+    return null;// driverService.delete(id);
   }
 
 
