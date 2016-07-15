@@ -22,6 +22,14 @@ app.config( function( $routeProvider , $locationProvider) {
       templateUrl: 'app/view/driver/form.html',
       controller: "DriverFormController"
     })
+    .when('/route', {
+      templateUrl: 'app/view/route/list.html',
+      controller: "RouteListController"
+    })
+    .when('/route/new', {
+      templateUrl: 'app/view/route/form.html',
+      controller: "RouteFormController"
+    })
     .when('/user', {
       templateUrl: 'app/view/user/user-list.html',
     })
