@@ -40,9 +40,18 @@ angular.module(moduleName).factory("MapService", function () {
     }
   };
 
-
-  mapService.findPlace = function (address, callback) {
+  mapService.findPlaceByName = function (address, callback) {
     geocoder.geocode({'address': address}, function (results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        callback(results[0]);
+      } else {
+        callback(null);
+      }
+    });
+  }
+
+  mapService.findPlaceByLocation = function ( latLng, callback) {
+    geocoder.geocode({'location': latLng}, function (results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         callback(results[0]);
       } else {
