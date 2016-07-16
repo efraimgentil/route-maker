@@ -30,6 +30,10 @@ app.config( function( $routeProvider , $locationProvider) {
       templateUrl: 'app/view/route/form.html',
       controller: "RouteFormController"
     })
+    .when('/location/new', {
+      templateUrl: 'app/view/location/form.html',
+      controller: "LocationFormController"
+    })
     .when('/user', {
       templateUrl: 'app/view/user/user-list.html',
     })
