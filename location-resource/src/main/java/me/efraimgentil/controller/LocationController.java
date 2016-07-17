@@ -55,7 +55,6 @@ public class LocationController {
 
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.DELETE )
   public Location delete( @PathVariable("id") Integer id ){
-
     return null;// driverService.delete(id);
   }
 

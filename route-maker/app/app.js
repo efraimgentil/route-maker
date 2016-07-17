@@ -2,6 +2,7 @@ var moduleName = "rm";
 var app = angular.module( moduleName , ["ngResource", "ngRoute" ]);
 app.constant("$authorizationResourceUrl", "http://localhost:8080/ws");
 app.constant("DriverResourceUrl", "http://localhost:8080/:id");
+app.constant("LocationResourceUrl", "http://localhost:8090/:id");
 
 
 app.config( function( $routeProvider , $locationProvider) {

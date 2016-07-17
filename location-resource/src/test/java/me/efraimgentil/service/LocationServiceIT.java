@@ -8,8 +8,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.postgis.PGgeometry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -21,6 +24,7 @@ import java.sql.SQLException;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {SpringConfig.class , DatabaseConfig.class })
+@TransactionConfiguration
 public class LocationServiceIT {
 
 
@@ -47,14 +51,17 @@ public class LocationServiceIT {
   }
 
 
+  @Rollback(true)
+  @Transactional
   @Test
   public void doesInsertANewLocation(){
     Location l = new Location();
-    l.setName("Home");
-    l.setPoint( new Point( 1.0 , 1.0 ) );
+    l.setName("Home 1111");
+    l.setPoint( new Point( 5.0 , 6.0 ) );
 
     locationService.create( l );
-
   }
+
+  
 
 }

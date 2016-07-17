@@ -23,6 +23,7 @@ dependencies {
     compile group:"org.springframework.security.oauth", name: 'spring-security-oauth2' , version: '2.0.10.RELEASE'
     compile group:"org.springframework.security" , name:"spring-security-jwt" , version: "1.0.0.RELEASE"
     compile group: 'org.springframework', name: 'spring-jdbc', version: '4.0.9.RELEASE'
+    compile group: 'org.springframework', name: 'spring-tx', version: '4.0.9.RELEASE'
 
     compile group:"com.fasterxml.jackson.core", name: 'jackson-core' , version: '2.6.1'
     compile group:"com.fasterxml.jackson.core", name: 'jackson-databind' , version: '2.6.1'

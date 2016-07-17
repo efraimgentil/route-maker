@@ -1,10 +1,8 @@
 angular.module( moduleName ).controller("LocationFormController" , [
-  "$scope" , "MapService" , "$location" , "$routeParams",
-  function($scope,  MapService , $location  , $routeParams){
+  "$scope" , "MapService" , "$location" , "$routeParams", "LocationService",
+  function($scope,  MapService , $location  , $routeParams , LocationService){
     var self = this;
-
     $scope.loc = "";
-    $scope.location = { point: {} };
 
     self.addMarkerAndUpdateField = function( data ){
       if(data){
@@ -21,15 +19,15 @@ angular.module( moduleName ).controller("LocationFormController" , [
     $scope.init = function(){
       MapService.initializeMap( $("#map")[0] , null , null , { height : 300 } );
 
-      MapService.findPlaceByLocation( new google.maps.LatLng( -3.7484683 , -38.52264100000002 ) , function(data){
-        self.addMarkerAndUpdateField(data);
-      });
       if( $routeParams.id ){
-        /*DriverService.get($routeParams.id , function(data){
-          $scope.driver = data;
-        });*/
+        LocationService.get( $routeParams.id, function( data ){
+          $scope.location = data;
+          MapService.findPlaceByLocation( new google.maps.LatLng( $scope.location.point.lat, $scope.location.point.lng ) , function(data){
+            self.addMarkerAndUpdateField(data);
+          });
+        } );
       }else{
-        $scope.driver = {};
+        $scope.location = { point: {} };
       }
     }
 

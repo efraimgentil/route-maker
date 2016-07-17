@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.util.ResourceBundle;
@@ -14,6 +16,7 @@ import java.util.ResourceBundle;
  * Created by efraimgentil<efraimgentil@gmail.com> on 16/06/16.
  */
 @Configuration
+@EnableTransactionManagement(proxyTargetClass = true )
 public class DatabaseConfig {
 
 
@@ -40,10 +43,14 @@ public class DatabaseConfig {
     return ds;
   }
 
+  @Bean(name = "transactionManager")
+  public DataSourceTransactionManager transactionManager( DataSource ds){
+    return new DataSourceTransactionManager( ds );
+  }
+
   @Bean
   public JdbcTemplate jdbcTemplate(DataSource ds){
     return new JdbcTemplate( ds );
   }
-
 
 }
