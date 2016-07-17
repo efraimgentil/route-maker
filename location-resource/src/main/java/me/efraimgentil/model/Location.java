@@ -1,5 +1,6 @@
 package me.efraimgentil.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.postgis.PGgeometry;
 import org.postgresql.geometric.PGpoint;
 
@@ -11,6 +12,8 @@ public class Location {
   private Integer id;
   private String name;
   private Point point;
+
+  @JsonIgnore
   private PGgeometry geom;
 
   public Location() {

@@ -2,6 +2,7 @@ package me.efraimgentil.service;
 
 import me.efraimgentil.config.DatabaseConfig;
 import me.efraimgentil.config.SpringConfig;
+import me.efraimgentil.exception.NotFoundException;
 import me.efraimgentil.model.Location;
 import me.efraimgentil.model.Point;
 import org.junit.Test;
@@ -18,6 +19,9 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by efraimgentil<efraimgentil@gmail.com> on 14/07/16.
@@ -34,7 +38,7 @@ public class LocationServiceIT {
   @Autowired
   LocationService locationService;
 
-  @Test
+/*  @Test
   public void does() throws SQLException {
     try(Connection conn = dataSource.getConnection()){
       ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM public.location");
@@ -48,8 +52,7 @@ public class LocationServiceIT {
         System.out.println(geom.getGeometry());
       }
     }
-  }
-
+  }*/
 
   @Rollback(true)
   @Transactional
@@ -59,9 +62,49 @@ public class LocationServiceIT {
     l.setName("Home 1111");
     l.setPoint( new Point( 5.0 , 6.0 ) );
 
-    locationService.create( l );
+    Location location = locationService.create(l);
+
+    assertNotNull( location.getId() );
   }
 
-  
+  @Rollback(true)
+  @Transactional
+  @Test
+  public void doesUpdateAnExistingLocation(){
+    Location l = new Location();
+    l.setId( 1 );
+    l.setName("Home 2222");
+    l.setPoint( new Point( 5.0 , 6.0 ) );
+
+    Location location = locationService.update(l);
+  }
+
+  @Test
+  public void doesQueryAllLocations(){
+    List<Location> locations = locationService.locations();
+
+    assertFalse( locations.isEmpty() );
+    for( Location l : locations){
+      assertNotNull(l.getId() );
+      assertNotNull(l.getName() );
+      assertNotNull(l.getGeom() );
+      assertNotNull(l.getPoint() );
+    }
+  }
+
+  @Test
+  public void doesReturnTheLocationOfTheSpecifiedId(){
+    Location location = locationService.get(1);
+
+    assertNotNull(location);
+  }
+
+  @Test(expected = NotFoundException.class)
+  public void doesThrowNotFoundExceptionWhenThereIsNoLocationWithTheSpecifiedId(){
+    Location location = locationService.get(99999);
+    assertNotNull(location);
+  }
+
+
 
 }

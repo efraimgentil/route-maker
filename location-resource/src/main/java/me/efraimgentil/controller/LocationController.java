@@ -22,41 +22,38 @@ public class LocationController {
   @Autowired
   DriverValidator validator;
   @Autowired
-  LocationService driverService;
+  LocationService locationService;
 
   @InitBinder
   public void initBinder(WebDataBinder binder){
     binder.setValidator( validator );
-
   }
 
   @RequestMapping(value = { "/" , "" } , method =  RequestMethod.GET)
-  public List<Location> drivers(){
-    return null;
+  public List<Location> locations(){
+    return locationService.locations();
   }
 
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.GET)
-  public Location driver(@PathVariable("id") Integer id ){
-
-    return null; //driverService.get(id);
+  public Location location(@PathVariable("id") Integer id ){
+    return locationService.get(id);
   }
 
   @RequestMapping(value = { "/" , "" } , method = RequestMethod.POST )
   public Location insert( @RequestBody @Validated Location driver , BindingResult result){
     if(result.hasErrors()) throw new InvalidaModelException( result );
-    return driverService.create(driver);
+    return locationService.create(driver);
   }
 
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.PUT )
   public Location update( @PathVariable("id") Integer id,  @RequestBody @Validated Location driver , BindingResult result){
     if(result.hasErrors()) throw new InvalidaModelException( result );
-    return null; //driverService.update(driver);
+    return locationService.update(driver);
   }
 
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.DELETE )
   public Location delete( @PathVariable("id") Integer id ){
-    return null;// driverService.delete(id);
+    return locationService.delete(id);
   }
-
 
 }
