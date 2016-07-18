@@ -7,7 +7,7 @@
     <div class="form-group">
       <label>Name</label>
       <input id="name" name="name" ng-model="location.name" class="form-control" ng-required="true" ng-minlength="3"/>
-      <div ng-show="form.name.$invalid">
+      <div ng-show="form.name.$dirty && form.name.$invalid">
         <span ng-show="form.name.$error.required" class="error-text"> Field is required</span>
         <span ng-show="form.name.$error.minlength"
               class="error-text"> This field requires a minimun of 3 characters</span>

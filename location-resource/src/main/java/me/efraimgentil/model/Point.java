@@ -1,10 +1,12 @@
 package me.efraimgentil.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.postgis.PGgeometry;
 
 /**
  * Created by efraimgentil<efraimgentil@gmail.com> on 15/07/16.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Point {
 
   private double lat;

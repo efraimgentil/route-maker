@@ -1,7 +1,7 @@
 angular.module(moduleName).service("LocationService" , [
   "LocationResourceUrl", "$resource" , function( LocationResourceUrl , $resource ){
+    var self = this;
     var Locations = $resource( LocationResourceUrl , { id : "@id" } , { update : { method : "PUT"} });
-
 
     self.get = function (id, callback) {
       Locations.get({id: id}, function success(data) {

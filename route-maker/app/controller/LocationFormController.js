@@ -4,6 +4,9 @@ angular.module( moduleName ).controller("LocationFormController" , [
     var self = this;
     $scope.loc = "";
 
+
+    console.log(LocationService);
+
     self.addMarkerAndUpdateField = function( data ){
       if(data){
         geom =  data.geometry;
@@ -31,8 +34,8 @@ angular.module( moduleName ).controller("LocationFormController" , [
       }
     }
 
-    $scope.new = function(){
-
+    $scope.save = function(){
+      LocationService.save( $scope.location , function(data){  console.log(data) } );
     }
 
     $scope.searchLocation = function(){

@@ -40,9 +40,9 @@ public class LocationController {
   }
 
   @RequestMapping(value = { "/" , "" } , method = RequestMethod.POST )
-  public Location insert( @RequestBody @Validated Location driver , BindingResult result){
+  public Location insert( @RequestBody @Validated Location location , BindingResult result){
     if(result.hasErrors()) throw new InvalidaModelException( result );
-    return locationService.create(driver);
+    return locationService.create(location);
   }
 
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.PUT )
