@@ -31,7 +31,15 @@ app.config( function( $routeProvider , $locationProvider) {
       templateUrl: 'app/view/route/form.html',
       controller: "RouteFormController"
     })
+    .when('/location', {
+      templateUrl: 'app/view/location/list.html',
+      controller: "LocationListController"
+    })
     .when('/location/new', {
+      templateUrl: 'app/view/location/form.html',
+      controller: "LocationFormController"
+    })
+    .when('/location/:id', {
       templateUrl: 'app/view/location/form.html',
       controller: "LocationFormController"
     })

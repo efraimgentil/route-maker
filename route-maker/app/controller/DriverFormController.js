@@ -14,10 +14,13 @@ angular.module( moduleName ).controller("DriverFormController" , [
 
     $scope.save = function(){
       DriverService.save( $scope.driver , function(){
-
+        $location.path("/driver");
       });
     }
 
+    $scope.cancel = function(){
+      $location.path("/driver");
+    }
 
   }
 ]);

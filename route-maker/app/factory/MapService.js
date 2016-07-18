@@ -22,12 +22,15 @@ angular.module(moduleName).factory("MapService", function () {
     }
   }
 
-  mapService.initializeMap = function (targetElement, lat, lng, mapConf) {
+  mapService.initializeMap = function (targetElement, lat, lng, mapConf , callback ) {
     setMapConfig(targetElement, mapConf);
     if (!lat && !lng && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {
         currentUserPosition = position;
         mapService.map = loadMap(targetElement, position.coords.latitude, position.coords.longitude);
+        google.maps.event.addListenerOnce( mapService.map  , 'tilesloaded' , function(){
+          if(callback) callback();
+        });
         directionsDisplay.setMap(mapService.map);
         for (var i in listeners) {
           for (var k in listeners[i]) {
@@ -37,6 +40,9 @@ angular.module(moduleName).factory("MapService", function () {
       });
     } else {
       mapService.map = loadMap(targetElement, lat, lng);
+      google.maps.event.addListenerOnce( mapService.map  , 'tilesloaded' , function(){
+        console.log("WHAAAAAAAT ? ");
+      });
     }
   };
 
