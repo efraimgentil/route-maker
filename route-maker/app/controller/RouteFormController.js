@@ -18,6 +18,11 @@ angular.module( moduleName ).controller("RouteFormController" , [
       self.locationVarName = locationVarName;
     }
 
+    $scope.prepareSelectLocation = function(locationVarName){
+      $scope.state = "selectLocation";
+      self.locationVarName = locationVarName;
+    }
+
     $scope.cancelNewLocation = function(){
       $scope.state = "formRoute";
     }
@@ -25,6 +30,10 @@ angular.module( moduleName ).controller("RouteFormController" , [
     $scope.backToRoute = function(location){
       $scope.route[self.locationVarName] = location;
       $scope.cancelNewLocation();
+    }
+
+    $scope.copyStartingLocation = function(){
+      $scope.route.endingLocation = $scope.route.startingLocation;
     }
 
   }

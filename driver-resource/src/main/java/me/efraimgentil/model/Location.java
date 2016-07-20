@@ -1,18 +1,24 @@
 package me.efraimgentil.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.postgis.PGgeometry;
+
 /**
  * Created by efraimgentil<efraimgentil@gmail.com> on 09/07/16.
  */
-public class Driver {
+public class Location {
 
   private Integer id;
   private String name;
-  private Location home;
+  private Point point;
 
-  public Driver() {
+  @JsonIgnore
+  private PGgeometry geom;
+
+  public Location() {
   }
 
-  public Driver(Integer id) {
+  public Location(Integer id) {
     this.id = id;
   }
 
@@ -29,7 +35,7 @@ public class Driver {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    Driver driver = (Driver) o;
+    Location driver = (Location) o;
     if (id != null ? !id.equals(driver.id) : driver.id != null) return false;
     return true;
   }
@@ -52,11 +58,19 @@ public class Driver {
     this.name = name;
   }
 
-  public Location getHome() {
-    return home;
+  public PGgeometry getGeom() {
+    return geom;
   }
 
-  public void setHome(Location home) {
-    this.home = home;
+  public void setGeom(PGgeometry geom) {
+    this.geom = geom;
+  }
+
+  public Point getPoint() {
+    return point;
+  }
+
+  public void setPoint(Point point) {
+    this.point = point;
   }
 }
