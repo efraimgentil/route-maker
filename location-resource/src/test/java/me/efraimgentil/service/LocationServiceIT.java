@@ -105,6 +105,4 @@ public class LocationServiceIT {
     assertNotNull(location);
   }
 
-
-
 }

@@ -1,0 +1,60 @@
+<div class="form-group">
+  <label>Name</label>
+  <input id="name" name="name" ng-model="location.name" class="form-control" ng-required="true" ng-minlength="3"/>
+  <div ng-show="form.name.$dirty && form.name.$invalid">
+    <span ng-show="form.name.$error.required" class="error-text"> Field is required</span>
+        <span ng-show="form.name.$error.minlength"
+              class="error-text"> This field requires a minimun of 3 characters</span>
+  </div>
+</div>
+
+<div class="form-group">
+  <label>Description</label>
+  <textarea id="description" name="description" ng-model="location.description" class="form-control"
+            style="resize:none"></textarea>
+</div>
+
+<div class="row">
+
+  <div class="form-group col-sm-12">
+    <label>Location</label>
+    <input id="location" name="location" ng-model="location.point.location" class="form-control" disabled="true"/>
+  </div>
+
+  <div class="form-group col-sm-6">
+    <label>Latitude</label>
+    <input id="lat" name="lat" ng-model="location.point.lat" class="form-control" ng-required="true"
+           ng-minlength="3"
+           disabled="true"/>
+  </div>
+  <div class="form-group col-sm-6">
+    <label>Longitude</label>
+    <input id="lon" name="lon" ng-model="location.point.lng" class="form-control" ng-required="true"
+           ng-minlength="3"
+           disabled="true"/>
+  </div>
+</div>
+
+<fieldset>
+  <legend>Search</legend>
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <label>Location</label>
+      <div class="input-group">
+        <input id="loc" name="loc" ng-model="searchLoc" class="form-control"/>
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" ng-click="searchLocation( searchLoc )" style="height: 34px"><span
+                      class="fa fa-search"></span></button>
+            </span>
+      </div>
+    </div>
+  </div>
+</fieldset>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+  </div>
+</div>
