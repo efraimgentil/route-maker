@@ -1,6 +1,5 @@
 package me.efraimgentil.config;
 
-import me.efraimgentil.filter.CORSFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +7,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -18,14 +16,6 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Created by efraimgentil<efraimgentil@gmail.com> on 16/02/16.
@@ -44,7 +34,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
   @Override
   public void configure(final HttpSecurity http) throws Exception {
-    http.addFilterBefore( new CORSFilter() , AbstractPreAuthenticatedProcessingFilter.class  )
+    /*http.addFilterBefore( new CORSFilter() , AbstractPreAuthenticatedProcessingFilter.class  )
             .addFilterAfter(new OncePerRequestFilter() {
               @Override
               protected void doFilterInternal(HttpServletRequest request,
@@ -52,12 +42,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                       throws ServletException, IOException {
                 // We don't want to allow access to a resource with no token so clear
                 // the security context in case it is actually an OAuth2Authentication
-                /*if (tokenExtractor.extract(request) == null) {
+                *//*if (tokenExtractor.extract(request) == null) {
                   SecurityContextHolder.clearContext();
-                }*/
+                }*//*
                 filterChain.doFilter(request, response);
               }
-            }, AbstractPreAuthenticatedProcessingFilter.class);
+            }, AbstractPreAuthenticatedProcessingFilter.class);*/
     http
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.NEVER)
