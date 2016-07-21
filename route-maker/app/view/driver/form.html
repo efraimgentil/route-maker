@@ -7,9 +7,33 @@
     <div class="form-group">
       <label>Name</label>
       <input id="name" name="name" ng-model="driver.name" class="form-control" ng-required="true" ng-minlength="3" />
-      <div ng-show="form.name.$invalid">
+      <div ng-show="form.name.$invalid && from.name.$dirty">
           <span ng-show="form.name.$error.required" class="error-text"> Field is required</span>
           <span ng-show="form.name.$error.minlength" class="error-text"> This field requires a minimun of 3 characters</span>
+      </div>
+    </div>
+
+    <fieldset>
+      <legend>Home</legend>
+      <div class="row">
+        <div class="form-group col-sm-6">
+          <label>Location</label>
+          <div class="input-group">
+            <input id="loc" name="loc" ng-model="searchLoc" class="form-control"/>
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" ng-click="searchLocation( searchLoc )" style="height: 34px"><span
+                      class="fa fa-search"></span></button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="row" style="margin-bottom:15px;">
+      <div class="col-sm-12">
+        <div class="map-container">
+          <div id="map"></div>
+        </div>
       </div>
     </div>
 

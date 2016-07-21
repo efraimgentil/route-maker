@@ -10,7 +10,9 @@ public class Location {
 
   private Integer id;
   private String name;
+  private String pointName;
   private Point point;
+  private boolean privateLocation;
 
   @JsonIgnore
   private PGgeometry geom;
@@ -24,9 +26,12 @@ public class Location {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("Driver{");
-    sb.append("id=").append(id);
+    final StringBuilder sb = new StringBuilder("Location{");
+    sb.append(", id=").append(id);
     sb.append(", name='").append(name).append('\'');
+    sb.append(", pointName='").append(pointName).append('\'');
+    sb.append(", point=").append(point);
+    sb.append(", privateLocation=").append(privateLocation);
     sb.append('}');
     return sb.toString();
   }
@@ -72,5 +77,20 @@ public class Location {
 
   public void setPoint(Point point) {
     this.point = point;
+  }
+
+  public boolean isPrivateLocation() {
+    return privateLocation;
+  }
+
+  public void setPrivateLocation(boolean privateLocation) {
+    this.privateLocation = privateLocation;
+  }
+  public String getPointName() {
+    return pointName;
+  }
+
+  public void setPointName(String pointName) {
+    this.pointName = pointName;
   }
 }

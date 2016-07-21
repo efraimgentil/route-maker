@@ -36,7 +36,6 @@ public class DriverController  {
 
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.GET)
   public Driver driver(@PathVariable("id") Integer id ){
-
     return driverService.get(id);
   }
 

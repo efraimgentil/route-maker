@@ -7,3 +7,7 @@ create table public.location(
  , description text
  , point geometry(POINT,3857)
 );
+
+
+alter table public.location add column point_name text;
+alter table public.location add column private boolean default false;
