@@ -9,12 +9,12 @@ import org.postgis.PGgeometry;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Point {
 
-  private double lat;
-  private double lng;
+  private Double lat;
+  private Double lng;
 
   public Point() {  }
 
-  public Point(double lat, double lng) {
+  public Point(Double lat, Double lng) {
     this.lat = lat;
     this.lng = lng;
   }
@@ -38,19 +38,19 @@ public class Point {
     return sb.toString();
   }
 
-  public double getLat() {
+  public Double getLat() {
     return lat;
   }
 
-  public void setLat(double lat) {
+  public void setLat(Double lat) {
     this.lat = lat;
   }
 
-  public double getLng() {
+  public Double getLng() {
     return lng;
   }
 
-  public void setLng(double lng) {
+  public void setLng(Double lng) {
     this.lng = lng;
   }
 }

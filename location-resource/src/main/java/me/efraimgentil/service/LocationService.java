@@ -61,20 +61,20 @@ public class LocationService {
   }
 
   @Transactional
-  public Location create(final Location driver) {
-    final String insertIntoSql = "INSERT INTO public.location ( name , point  ) VALUES ( ? , GeomFromEWKT(?) )";
+  public Location create(final Location location) {
+    final String insertIntoSql = "INSERT INTO public.location ( name , point ) VALUES ( ? , GeomFromEWKT(?)  )";
     KeyHolder keyHolder = new GeneratedKeyHolder();
     jdbcTemplate.update(
             new PreparedStatementCreator() {
               public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
                 PreparedStatement ps = con.prepareStatement(insertIntoSql, new String[]{"id"});
-                ps.setString(1, driver.getName());
-                ps.setString(2, driver.getPoint().toGeom());
+                ps.setString(1, location.getName());
+                ps.setString(2, location.getPoint().toGeom());
                 return ps;
               }
             }, keyHolder);
-    driver.setId(keyHolder.getKey().intValue());
-    return driver;
+    location.setId(keyHolder.getKey().intValue());
+    return location;
   }
 
   protected Location mountLocation(ResultSet rs) throws SQLException {

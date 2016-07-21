@@ -13,12 +13,12 @@ import static org.mockito.Mockito.*;
  */
 public class DriverValidatorTest {
 
-  private DriverValidator validator;
+  private LocationValidator validator;
   private Errors errors;
 
   @Before
   public void setUp(){
-    validator = new DriverValidator();
+    validator = new LocationValidator();
     errors = mock( Errors.class );
   }
 

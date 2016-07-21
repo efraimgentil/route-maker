@@ -2,7 +2,7 @@ package me.efraimgentil.controller;
 
 import me.efraimgentil.model.Location;
 import me.efraimgentil.service.LocationService;
-import me.efraimgentil.validator.DriverValidator;
+import me.efraimgentil.validator.LocationValidator;
 import me.efraimgentil.exception.InvalidaModelException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -20,7 +20,7 @@ import java.util.List;
 public class LocationController {
 
   @Autowired
-  DriverValidator validator;
+  LocationValidator validator;
   @Autowired
   LocationService locationService;
 
