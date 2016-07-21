@@ -1,12 +1,16 @@
 package me.efraimgentil.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by efraimgentil<efraimgentil@gmail.com> on 09/07/16.
  */
+@JsonIgnoreProperties(ignoreUnknown =  true)
 public class Driver {
 
   private Integer id;
   private String name;
+  private Integer locationId;
   private Location home;
 
   public Driver() {
@@ -58,5 +62,13 @@ public class Driver {
 
   public void setHome(Location home) {
     this.home = home;
+  }
+
+  public Integer getLocationId() {
+    return locationId;
+  }
+
+  public void setLocationId(Integer locationId) {
+    this.locationId = locationId;
   }
 }

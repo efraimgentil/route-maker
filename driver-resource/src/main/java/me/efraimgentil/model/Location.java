@@ -1,11 +1,13 @@
 package me.efraimgentil.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.postgis.PGgeometry;
 
 /**
  * Created by efraimgentil<efraimgentil@gmail.com> on 09/07/16.
  */
+@JsonIgnoreProperties(ignoreUnknown =  true)
 public class Location {
 
   private Integer id;

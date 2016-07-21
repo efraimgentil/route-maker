@@ -3,15 +3,10 @@ angular.module( moduleName ).controller("DriverFormController" , [
   function($scope,  DriverService , $location , $routeParams , MapService ){
     var self = this;
 
-    self.addMarkerAndUpdateField = function( data ){
+    self.addMarker = function( data ){
       if(data){
-        var geom = data.geometry;
-        $scope.driver.location.point.lat = geom.location.lat();
-        $scope.driver.location.point.lng = geom.location.lng();
-        $scope.driver.location.pointName = $scope.searchLoc =  data.formatted_address;
         MapService.removeAllMarkers();
-        MapService.addMarker( data.formatted_address  ,  $scope.driver.location.point );
-        $scope.$apply();
+        MapService.addMarker( data.formatted_address  ,  $scope.driver.home.point );
       }
     }
 
@@ -20,21 +15,29 @@ angular.module( moduleName ).controller("DriverFormController" , [
         if( $routeParams.id ){
           DriverService.get($routeParams.id , function(data){
             $scope.driver = data;
-            if($scope.driver.location){
-              MapService.findPlaceByLocation( new google.maps.LatLng( $scope.driver.location.point.lat, $scope.driver.location.point.lng ) , function(data){
-                self.addMarkerAndUpdateField(data);
+            if($scope.driver.home){
+              $scope.searchLoc = $scope.driver.home.pointName;
+              MapService.findPlaceByLocation( new google.maps.LatLng( $scope.driver.home.point.lat, $scope.driver.home.point.lng ) , function(data){
+                self.addMarker(data);
               });
+            }else {
+              $scope.driver.home = { point:{} };
             }
           });
         }else{
-          $scope.driver = { location: { point:{} } };
+          $scope.driver = { home: { point:{} } };
         }
       } );
     }
 
     $scope.searchLocation = function( searchLoc ){
       MapService.findPlaceByName( searchLoc  , function(data){
-        self.addMarkerAndUpdateField(data);
+        var geom = data.geometry;
+        $scope.driver.home.point.lat = geom.location.lat();
+        $scope.driver.home.point.lng = geom.location.lng();
+        $scope.driver.home.pointName = $scope.searchLoc =  data.formatted_address;
+        self.addMarker(data);
+        $scope.$apply();
       });
     }
 

@@ -3,8 +3,11 @@ package me.efraimgentil.service;
 import me.efraimgentil.exception.NotFoundException;
 import me.efraimgentil.model.Driver;
 import me.efraimgentil.model.Location;
+import me.efraimgentil.model.Point;
+import org.postgis.PGgeometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowCallbackHandler;
@@ -33,9 +36,7 @@ public class DriverService {
   @Autowired
   JdbcTemplate jdbcTemplate;
 
-  private AtomicInteger ids = new AtomicInteger(0);
-  private static List<Driver> drivers = new ArrayList<>();
-
+  @Transactional(propagation = Propagation.NOT_SUPPORTED)
   public List<Driver> drivers(){
     final List<Driver> drivers = new ArrayList<>();
     jdbcTemplate.query("SELECT * FROM driver", new Object[]{}, new RowCallbackHandler() {
@@ -47,12 +48,33 @@ public class DriverService {
     return drivers;
   }
 
+  @Transactional(propagation = Propagation.NOT_SUPPORTED)
   public Driver get(Integer id) {
-    return jdbcTemplate.queryForObject("SELECT * FROM public.driver WHERE id = ?", new Object[]{id}, new RowMapper<Driver>() {
-      public Driver mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return mountDriver(rs);
-      }
-    });
+    try {
+      return jdbcTemplate.queryForObject("SELECT * FROM public.driver WHERE id = ?", new Object[]{id}, new RowMapper<Driver>() {
+        public Driver mapRow(ResultSet rs, int rowNum) throws SQLException {
+          Driver driver = mountDriver(rs);
+          driver.setHome( getLocation( driver.getLocationId() ) );
+          return driver;
+        }
+      });
+    } catch (EmptyResultDataAccessException erdae) {
+      throw new NotFoundException();
+    }
+  }
+
+  @Transactional(propagation = Propagation.NOT_SUPPORTED)
+  public Location getLocation(int id) {
+    try {
+      Location location = jdbcTemplate.queryForObject("SELECT * FROM public.location WHERE id = ?", new Object[]{id}, new RowMapper<Location>() {
+        public Location mapRow(ResultSet rs, int rowNum) throws SQLException {
+          return mountLocation(rs);
+        }
+      });
+      return location;
+    } catch (EmptyResultDataAccessException erdae) {
+      throw new NotFoundException();
+    }
   }
 
   @Transactional(propagation = Propagation.REQUIRED )
@@ -85,11 +107,16 @@ public class DriverService {
   @Transactional(propagation = Propagation.REQUIRED)
   public Driver update(Driver driver) {
     Location home = driver.getHome();
-    String updateLocation = "UPDATE public.location SET name = ? , point = GeomFromEWKT(?) , point_name = ?  WHERE id = ?";
-    int update1 = jdbcTemplate.update(updateLocation, (driver.getName() + "'s Home"), home.getPoint().toGeom(), home.getPointName(), home.getId());
-    String updateDriver = "UPDATE public.driver SET name = ?  WHERE id = ?";
-    int update = jdbcTemplate.update(updateDriver, driver.getName(), driver.getId());
-    if(update1 <= 0 || update <= 0) throw new NotFoundException();
+    if(home.getId() == null){
+      driver.setHome(insertAndRetriveLocation(driver));
+    }else {
+      String updateLocation = "UPDATE public.location SET name = ? , point = GeomFromEWKT(?) , point_name = ?  WHERE id = ?";
+      int update1 = jdbcTemplate.update(updateLocation, (driver.getName() + "'s Home"), home.getPoint().toGeom(), home.getPointName(), home.getId());
+      if(update1 <= 0 ) throw new NotFoundException();
+    }
+    String updateDriver = "UPDATE public.driver SET name = ? , location_id = ? WHERE id = ?";
+    int update = jdbcTemplate.update(updateDriver, driver.getName(), driver.getHome().getId() , driver.getId());
+    if( update <= 0) throw new NotFoundException();
     return driver;
   }
 
@@ -104,7 +131,18 @@ public class DriverService {
     Driver driver = new Driver();
     driver.setId(rs.getInt("id"));
     driver.setName(rs.getString("name"));
+    driver.setLocationId(rs.getInt("location_id"));
     return driver;
+  }
+
+  protected Location mountLocation(ResultSet rs) throws SQLException {
+    Location location = new Location();
+    location.setId(rs.getInt("id"));
+    location.setPointName(rs.getString("point_name"));
+    location.setName(rs.getString("name"));
+    location.setGeom((PGgeometry) rs.getObject("point"));
+    location.setPoint(new Point(location.getGeom()));
+    return location;
   }
 
 }
