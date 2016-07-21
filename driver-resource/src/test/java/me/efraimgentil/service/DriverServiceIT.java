@@ -45,4 +45,23 @@ public class DriverServiceIT {
     assertNotNull( driver.getHome().getId() );
   }
 
+  @Rollback(true)
+  @Transactional
+  @Test
+  public void doesDriverDriverAndLocation() {
+    Driver d = new Driver();
+    d.setId( 1 );
+    d.setName("Driver Efras");
+    Location l = new Location();
+    l.setId( 17 );
+    l.setPointName("My New Point Name");
+    l.setPoint(new Point(0, 0));
+    d.setHome(l);
+
+    Driver driver = service.update(d);
+
+    assertNotNull( driver.getId() );
+    assertNotNull( driver.getHome().getId() );
+  }
+
 }

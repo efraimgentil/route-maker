@@ -82,10 +82,14 @@ public class DriverService {
     return home;
   }
 
+  @Transactional(propagation = Propagation.REQUIRED)
   public Driver update(Driver driver) {
-    int indexOf = drivers.indexOf(driver);
-    if(indexOf < 0) throw new NotFoundException();
-    drivers.set( indexOf , driver );
+    Location home = driver.getHome();
+    String updateLocation = "UPDATE public.location SET name = ? , point = GeomFromEWKT(?) , point_name = ?  WHERE id = ?";
+    int update1 = jdbcTemplate.update(updateLocation, (driver.getName() + "'s Home"), home.getPoint().toGeom(), home.getPointName(), home.getId());
+    String updateDriver = "UPDATE public.driver SET name = ?  WHERE id = ?";
+    int update = jdbcTemplate.update(updateDriver, driver.getName(), driver.getId());
+    if(update1 <= 0 || update <= 0) throw new NotFoundException();
     return driver;
   }
 
