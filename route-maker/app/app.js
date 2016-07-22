@@ -31,6 +31,9 @@ app.config( function( $routeProvider , $locationProvider) {
       templateUrl: 'app/view/route/form.html',
       controller: "RouteFormController"
     })
+    .when('/route/stop', {
+      templateUrl: 'app/view/route/stop_form.html'
+    })
     .when('/location', {
       templateUrl: 'app/view/location/list.html',
       controller: "LocationListController"

@@ -51,7 +51,5 @@ angular.module( moduleName ).controller("DriverFormController" , [
       $location.path("/driver");
     }
 
-
-
   }
 ]);

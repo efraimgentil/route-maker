@@ -52,9 +52,9 @@
         <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12">
           <label>Driver</label>
           <div class="input-group">
-            <input id="driver" name="driver" ng-model="route.hour" class="form-control" ng-required="true"/>
+            <input id="driver" name="driver" ng-model="route.driver.name" class="form-control" ng-disabled="true"/>
           <span class="input-group-btn">
-            <button class="btn btn-info">Select Existing</button>
+            <button class="btn btn-info" type="button" ng-click="prepareSelectDriver()">Select Existing</button>
             <button class="btn btn-default">Sugest a Driver</button>
           </span>
           </div>
@@ -124,6 +124,40 @@
               <td>{{item.description}}</td>
               <td>
                 <button class="btn btn-xs btn-default" type="button" title="Select" ng-click="backToRoute(item)"><span class="fa fa-check"></span></button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+
+  <div ng-if="state == 'selectDriver'">
+    <div ng-controller="SelectDriverController as ctrl" ng-init="init()">
+      <form>
+        <div class="row">
+          <div class="form-group col-sm-6">
+            <label>Search</label>
+            <input id="searchDriver" ng-model="name" class="form-control" />
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-striped table-condensed">
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in drivers track by item.id">
+              <td>{{item.name}}</td>
+              <td>
+                <button class="btn btn-xs btn-default" type="button" title="Select" ng-click="selectDriverAndBackToRoute(item)"><span class="fa fa-check"></span></button>
               </td>
             </tr>
             </tbody>

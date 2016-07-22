@@ -36,5 +36,14 @@ angular.module( moduleName ).controller("RouteFormController" , [
       $scope.route.endingLocation = $scope.route.startingLocation;
     }
 
+    $scope.prepareSelectDriver = function(){
+      $scope.state = "selectDriver";
+    }
+
+    $scope.selectDriverAndBackToRoute = function(driver){
+      $scope.route.driver = driver;
+      $scope.cancelNewLocation();
+    }
+
   }
 ]);
