@@ -3,10 +3,8 @@ function adaptPageWraper(){
 };
 
 $(function(){
-
   $(window).resize(function(){
 //    adaptPageWraper();
   });
 //  adaptPageWraper();
-
 });

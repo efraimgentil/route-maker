@@ -6,7 +6,7 @@ angular.module( moduleName ).controller("RouteFormController" , [
     self.locationVarName= "";
 
     $scope.init = function(){
-      $scope.route = { startingLocation: {} , endingLocation: { } };
+      $scope.route = { startingLocation: {} , endingLocation: { } , stops : [] };
     }
 
     $scope.new = function(){
@@ -23,13 +23,13 @@ angular.module( moduleName ).controller("RouteFormController" , [
       self.locationVarName = locationVarName;
     }
 
-    $scope.cancelNewLocation = function(){
+    $scope.backToRouteForm = function(){
       $scope.state = "formRoute";
     }
 
     $scope.backToRoute = function(location){
       $scope.route[self.locationVarName] = location;
-      $scope.cancelNewLocation();
+      $scope.backToRouteForm();
     }
 
     $scope.copyStartingLocation = function(){
@@ -42,7 +42,16 @@ angular.module( moduleName ).controller("RouteFormController" , [
 
     $scope.selectDriverAndBackToRoute = function(driver){
       $scope.route.driver = driver;
-      $scope.cancelNewLocation();
+      $scope.backToRouteForm();
+    }
+
+    $scope.addStop = function( stop ){
+      $scope.route.stops.push( stop );
+      $scope.backToRouteForm();
+    }
+
+    $scope.prepareAddStop = function(){
+      $scope.state = "formStop";
     }
 
   }

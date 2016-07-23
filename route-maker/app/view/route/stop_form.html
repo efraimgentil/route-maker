@@ -1,10 +1,9 @@
-
-<div ng-controller="StopFormController as ctrl" ng-init="init()">
-  <form id="stopForm" ng-submit="addStop()" novalidate="novalidate">
+<div   ng-controller="StopFormController as ctrl" ng-init="init()" >
+  <form id="stopForm" name="stopForm" ng-submit="addStop( stop )" novalidate="novalidate">
 
     <div class="form-group">
       <label>Passenger</label>
-      <input id="passenger" ng-model="passenger" class="form-control" ng-required="true"
+      <input id="passenger" name="passenger" ng-model="stop.passenger" class="form-control" ng-required="true"
        ng-minlength="3" />
       <div ng-show="stopForm.passenger.$invalid && stopForm.passenger.$dirty">
         <span ng-show="stopForm.passenger.$error.required" class="error-text"> Field is required</span>
@@ -13,7 +12,7 @@
     </div>
 
     <div class="form-group">
-      <label>Location</label>
+      <label>Location A</label>
       <div class="input-group">
         <input id="loc" name="loc" ng-model="searchLoc" class="form-control"
         on-enter="searchLocation( searchLoc )" />
@@ -27,9 +26,14 @@
     <div class="row" style="margin-bottom:15px;">
       <div class="col-sm-12">
         <div class="map-container">
-          <div id="map"></div>
+          <div id="mapStop"></div>
         </div>
       </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 15px;">
+      <button class="btn btn-success btn-sm" type="submit" ng-disabled="stopForm.$invalid">Add Stop</button>
+      <button class="btn btn-danger btn-sm" ng-click="backToRouteForm()">Cancel</button>
     </div>
 
   </form>

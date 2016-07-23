@@ -44,8 +44,9 @@
 
         <div class="form-group col-sm-12 col-md-12 col-sm-12  col-xs-12">
           <label>Stops</label>
-          <button class="btn btn-xs btn-success"><span class="fa fa-plus"></span> Add Stop</button>
+          <button class="btn btn-xs btn-success" ng-click="prepareAddStop()"><span class="fa fa-plus"></span> Add Stop</button>
           <ul>
+            <li ng-repeat="route in route.stops track by $index"></li>
           </ul>
         </div>
 
@@ -94,7 +95,7 @@
 
         <div class="form-group" style="margin-top: 15px;">
           <button class="btn btn-success btn-sm" type="submit" ng-disabled="form.$invalid">Save Location and Go Back</button>
-          <button class="btn btn-danger btn-sm" ng-click="cancelNewLocation()">Cancel</button>
+          <button class="btn btn-danger btn-sm" ng-click="backToRouteForm()">Cancel</button>
         </div>
       </form>
 
@@ -163,9 +164,12 @@
             </tbody>
           </table>
         </div>
-
       </form>
     </div>
+  </div>
+
+  <div ng-if="state == 'formStop'">
+    <ng-include  src="'app/view/route/stop_form.html'" ></ng-include>
   </div>
 
 </div>
