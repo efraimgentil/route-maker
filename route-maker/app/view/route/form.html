@@ -7,7 +7,9 @@
       <div class="row">
         <div class="form-group col-lg-2 col-md-2 col-sm-3 col-xs-12">
           <label>Date</label>
-          <input id="date" name="date" ng-model="route.date" class="form-control" ng-required="true" ng-minlength="3"/>
+          <input id="date" name="date" type="date"  ng-model="route.date"
+                 placeholder="yyyy-MM-dd"
+                 class="form-control" ng-required="true" ng-minlength="3"/>
           <div ng-show="form.name.$invalid">
             <span ng-show="form.name.$error.required" class="error-text"> Field is required</span>
           <span ng-show="form.name.$error.minlength"
@@ -17,7 +19,7 @@
 
         <div class="form-group col-lg-2 col-md-2 col-sm-3 col-xs-12">
           <label>Hour</label>
-          <input id="hour" name="hour" ng-model="route.hour" class="form-control" ng-required="true" ng-minlength="3"/>
+          <input id="hour" name="hour" type="time" ng-model="route.hour" class="form-control" ng-required="true" ng-minlength="3"/>
           <div ng-show="form.name.$invalid">
             <span ng-show="form.name.$error.required" class="error-text"> Field is required</span>
           <span ng-show="form.name.$error.minlength"
@@ -46,7 +48,7 @@
           <label>Stops</label>
           <button class="btn btn-xs btn-success" ng-click="prepareAddStop()"><span class="fa fa-plus"></span> Add Stop</button>
           <ul>
-            <li ng-repeat="route in route.stops track by $index"></li>
+            <li ng-repeat="stop in route.stops track by $index">Passenger: {{stop.passenger}}, Stop At: {{stop.pointName}}</li>
           </ul>
         </div>
 
