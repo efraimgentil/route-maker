@@ -1,6 +1,8 @@
 package me.efraimgentil.controller;
 
+import me.efraimgentil.model.Driver;
 import me.efraimgentil.model.Location;
+import me.efraimgentil.model.Route;
 import me.efraimgentil.service.RouteService;
 import me.efraimgentil.validator.RouteValidator;
 import me.efraimgentil.exception.InvalidaModelException;
@@ -19,41 +21,47 @@ import java.util.List;
 @RequestMapping(value = { "/" })
 public class RouteController {
 
-  @Autowired
-  RouteValidator validator;
-  @Autowired
-  RouteService locationService;
+  @Autowired RouteValidator validator;
+  @Autowired RouteService routeService;
 
   @InitBinder
   public void initBinder(WebDataBinder binder){
     binder.setValidator( validator );
   }
 
+
+  @RequestMapping(value = { "/suggest-driver" , "/suggest-driver/" } , method =  RequestMethod.POST)
+  public Driver sugestDriver( @RequestBody @Validated Route route ){
+
+
+    return null;
+  }
+
   @RequestMapping(value = { "/" , "" } , method =  RequestMethod.GET)
   public List<Location> locations(){
-    return locationService.locations();
+    return routeService.locations();
   }
 
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.GET)
   public Location location(@PathVariable("id") Integer id ){
-    return locationService.get(id);
+    return routeService.get(id);
   }
 
   @RequestMapping(value = { "/" , "" } , method = RequestMethod.POST )
   public Location insert( @RequestBody @Validated Location location , BindingResult result){
     if(result.hasErrors()) throw new InvalidaModelException( result );
-    return locationService.create(location);
+    return routeService.create(location);
   }
 
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.PUT )
   public Location update( @PathVariable("id") Integer id,  @RequestBody @Validated Location driver , BindingResult result){
     if(result.hasErrors()) throw new InvalidaModelException( result );
-    return locationService.update(driver);
+    return routeService.update(driver);
   }
 
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.DELETE )
   public Location delete( @PathVariable("id") Integer id ){
-    return locationService.delete(id);
+    return routeService.delete(id);
   }
 
 }

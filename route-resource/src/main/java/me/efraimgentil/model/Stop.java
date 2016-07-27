@@ -18,6 +18,11 @@ public class Stop {
 
   public Stop() { }
 
+  public Stop(String passenger , Point point ) {
+    this.passenger = passenger;
+    this.point = point;
+  }
+
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("Stop{");

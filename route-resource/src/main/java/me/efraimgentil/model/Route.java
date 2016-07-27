@@ -12,6 +12,7 @@ public class Route {
   private Date date;
   private Location startingLocation;
   private Location endingLocation;
+  private Driver driver;
   private List<Stop> stops;
 
   public Route() {  }
@@ -57,6 +58,12 @@ public class Route {
   }
   public void setStops(List<Stop> stops) {
     this.stops = stops;
+  }
+  public Driver getDriver() {
+    return driver;
+  }
+  public void setDriver(Driver driver) {
+    this.driver = driver;
   }
 
 }

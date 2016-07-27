@@ -28,6 +28,7 @@ dependencies {
 
     compile group:"com.fasterxml.jackson.core", name: 'jackson-core' , version: '2.6.1'
     compile group:"com.fasterxml.jackson.core", name: 'jackson-databind' , version: '2.6.1'
+    compile group: 'joda-time', name: 'joda-time', version: '2.9.4'
 
     compile group: 'com.zaxxer', name: 'HikariCP', version: '2.3.8'
     compile group: 'org.postgresql', name: 'postgresql', version: '9.4-1201-jdbc41'
