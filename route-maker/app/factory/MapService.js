@@ -41,7 +41,7 @@ angular.module(moduleName).factory("MapService", function () {
     } else {
       mapService.map = loadMap(targetElement, lat, lng);
       google.maps.event.addListenerOnce( mapService.map  , 'tilesloaded' , function(){
-        console.log("WHAAAAAAAT ? ");
+        //console.log("WHAAAAAAAT ? ");
       });
     }
   };

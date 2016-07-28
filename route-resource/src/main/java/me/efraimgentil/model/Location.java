@@ -23,6 +23,11 @@ public class Location {
     this.id = id;
   }
 
+  public Location(String name , Point point) {
+    this.name = name;
+    this.point = point;
+  }
+
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("Driver{");
