@@ -1,5 +1,6 @@
 package me.efraimgentil.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,9 +14,13 @@ public class Route {
   private Location startingLocation;
   private Location endingLocation;
   private Driver driver;
-  private List<Stop> stops;
+  private List<Stop> stops = new ArrayList<>();
 
   public Route() {  }
+
+  public void addStep(Stop stop){
+    stops.add( stop );
+  }
 
   @Override
   public String toString() {
