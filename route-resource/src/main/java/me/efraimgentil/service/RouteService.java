@@ -1,8 +1,11 @@
 package me.efraimgentil.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import me.efraimgentil.exception.NotFoundException;
 import me.efraimgentil.model.Location;
 import me.efraimgentil.model.Point;
+import me.efraimgentil.model.Route;
+import me.efraimgentil.model.Stop;
 import org.postgis.PGgeometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -31,8 +34,16 @@ import java.util.List;
 @Lazy(true)
 public class RouteService {
 
-  @Autowired
-  JdbcTemplate jdbcTemplate;
+  @Autowired JdbcTemplate jdbcTemplate;
+  @Autowired GoogleDirectionService directionService;
+
+
+  public Route createRoute(Route route ){
+    JsonNode jsonRoute = directionService.callGoogleService(route);
+    List<Stop> orderedStops  = orderStops(jsonRoute, route.getStops());
+    route.setStops( orderedStops );
+    return route;
+  }
 
   @Transactional(propagation = Propagation.NOT_SUPPORTED)
   public List<Location> locations() {
@@ -101,6 +112,15 @@ public class RouteService {
     int update = jdbcTemplate.update(sql, new Object[]{id});
     if(update <= 0 ) throw new NotFoundException();
     return location;
+  }
+
+  protected List<Stop> orderStops(JsonNode routeNode, List<Stop> stops) {
+    final List<Stop> orderedStops = new ArrayList<>();
+    //if( !routeNode.has("waypoint_order") ) throw new NoWayPointOrderException();
+    for (JsonNode n : routeNode.get("waypoint_order")) {
+      orderedStops.add(stops.get(n.asInt()));
+    }
+    return orderedStops;
   }
 
 }

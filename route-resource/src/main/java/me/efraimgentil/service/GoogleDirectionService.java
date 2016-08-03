@@ -34,8 +34,9 @@ public class GoogleDirectionService {
   protected JsonNode validateResultAndReturn(JsonNode result) {
     String status = result.get("status").asText();
     if("NOT_FOUND".equals(status)){
+
     }
-    return result.get("routes").get(0);
+    return result;
   }
 
   protected String mountApiUri(  Route route  ){
@@ -57,13 +58,6 @@ public class GoogleDirectionService {
     return uri;
   }
 
-  protected List<Stop> orderStops(JsonNode routeNode, List<Stop> stops) {
-    final List<Stop> orderedStops = new ArrayList<>();
-    //if( !routeNode.has("waypoint_order") ) throw new NoWayPointOrderException();
-    for (JsonNode n : routeNode.get("waypoint_order")) {
-      orderedStops.add(stops.get(n.asInt()));
-    }
-    return orderedStops;
-  }
+
 
 }

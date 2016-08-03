@@ -94,6 +94,12 @@ angular.module(moduleName).factory("MapService", function () {
     }
   }
 
+
+ /* mapService.drawRoute = function (response) {
+      console.log(response);
+      directionsDisplay.setDirections(response);
+  }*/
+
   mapService.drawRoute = function (startPoint, endPoint) {
     directionService.route(
       {
@@ -106,6 +112,10 @@ angular.module(moduleName).factory("MapService", function () {
           directionsDisplay.setDirections(response);
         }
       });
+  }
+  
+  mapService.getDirectionService = function(){
+    return directionService;
   }
 
   /*mapService.gerMarksers = function(){
