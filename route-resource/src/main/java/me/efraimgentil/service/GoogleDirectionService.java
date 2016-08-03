@@ -36,7 +36,7 @@ public class GoogleDirectionService {
     if("NOT_FOUND".equals(status)){
 
     }
-    return result;
+    return result.get("routes").get(0);
   }
 
   protected String mountApiUri(  Route route  ){

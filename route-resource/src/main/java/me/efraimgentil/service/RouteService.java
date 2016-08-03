@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,11 +35,52 @@ public class RouteService {
   @Autowired GoogleDirectionService directionService;
 
 
-  public Route createRoute(Route route ){
+  public Route createRoute(final Route route ){
     JsonNode jsonRoute = directionService.callGoogleService(route);
     List<Stop> orderedStops  = orderStops(jsonRoute, route.getStops());
     route.setStops( orderedStops );
+
+    final String insertIntoSql = "INSERT INTO public.route ( date ,  starting_location_id , ending_location_id " +
+            ", driver_id , created_at ) VALUES ( ? , ? , ? , ? , now() )";
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+    jdbcTemplate.update(
+            new PreparedStatementCreator() {
+              public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(insertIntoSql, new String[]{"id"});
+                ps.setDate(1, new Date( route.getDate().getTime() ) );
+                ps.setInt(2, route.getStartingLocation().getId());
+                ps.setInt(3, route.getEndingLocation().getId());
+                ps.setInt(4, route.getDriver().getId());
+                return ps;
+              }
+            }, keyHolder);
+    route.setId(keyHolder.getKey().longValue() );
+    saveStops( route );
+
+
     return route;
+  }
+
+  private void saveStops(Route route) {
+    List<Stop> stops = route.getStops();
+
+    final String insertIntoSql = "INSERT INTO public.stop ( date ,  starting_location_id , ending_location_id " +
+            ", driver_id , created_at ) VALUES ( ? , ? , ? , ? , now() )";
+    for(Stop stop : stops ){
+      KeyHolder keyHolder = new GeneratedKeyHolder();
+      jdbcTemplate.update(
+              new PreparedStatementCreator() {
+                public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                  PreparedStatement ps = con.prepareStatement(insertIntoSql, new String[]{"id"});
+                  ps.setDate(1, new Date( route.getDate().getTime() ) );
+                  ps.setInt(2, route.getStartingLocation().getId());
+                  ps.setInt(3, route.getEndingLocation().getId());
+                  ps.setInt(4, route.getDriver().getId());
+                  return ps;
+                }
+              }, keyHolder);
+      route.setId(keyHolder.getKey().longValue() );
+    }
   }
 
   @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -118,7 +156,9 @@ public class RouteService {
     final List<Stop> orderedStops = new ArrayList<>();
     //if( !routeNode.has("waypoint_order") ) throw new NoWayPointOrderException();
     for (JsonNode n : routeNode.get("waypoint_order")) {
-      orderedStops.add(stops.get(n.asInt()));
+      Stop stop = stops.get(n.asInt());
+      stop.setOrder( n.asInt() );
+      orderedStops.add( stop );
     }
     return orderedStops;
   }

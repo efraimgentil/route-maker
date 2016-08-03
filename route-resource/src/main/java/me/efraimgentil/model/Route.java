@@ -11,6 +11,7 @@ public class Route {
 
   private Long id;
   private Date date;
+  private Date createdAt;
   private Location startingLocation;
   private Location endingLocation;
   private Driver driver;

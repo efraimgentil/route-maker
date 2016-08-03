@@ -9,6 +9,8 @@ import org.postgis.PGgeometry;
 public class Stop {
 
   private Long id;
+  private Long routeId;
+  private Integer order;
   private String passenger;
 
   @JsonIgnore
@@ -26,7 +28,9 @@ public class Stop {
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("Stop{");
-    sb.append("id=").append(id);
+    sb.append(", id=").append(id);
+    sb.append(", routeId=").append(routeId);
+    sb.append(", order=").append(order);
     sb.append(", passenger='").append(passenger).append('\'');
     sb.append(", point=").append(point);
     sb.append('}');
@@ -58,4 +62,19 @@ public class Stop {
     this.point = point;
   }
 
+  public Long getRouteId() {
+    return routeId;
+  }
+
+  public void setRouteId(Long routeId) {
+    this.routeId = routeId;
+  }
+
+  public Integer getOrder() {
+    return order;
+  }
+
+  public void setOrder(Integer order) {
+    this.order = order;
+  }
 }

@@ -11,3 +11,5 @@ create table public.location(
 
 alter table public.location add column point_name text;
 alter table public.location add column private boolean default false;
+
+
