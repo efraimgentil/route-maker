@@ -25,6 +25,12 @@ public class Stop {
     this.point = point;
   }
 
+  public Stop(Integer order , String passenger , Point point ) {
+    this.order = order;
+    this.passenger = passenger;
+    this.point = point;
+  }
+
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("Stop{");

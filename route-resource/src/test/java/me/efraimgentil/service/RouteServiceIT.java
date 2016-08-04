@@ -50,10 +50,6 @@ public class RouteServiceIT {
   RouteService service;
 
 
-  @Test
-  public void does(){
-    System.out.println( service.get(1) ) ;
-  }
 /*  @Test
   public void does() throws SQLException {
     try(Connection conn = dataSource.getConnection()){
@@ -76,10 +72,10 @@ public class RouteServiceIT {
   public void doesInsertANewLocation(){
     Route route = new Route();
     route.setDate( new Date() );
-    route.setStartingLocation( new Location( 1, "Extra" , new Point( -3.748777994300508 , -38.523672223091125 )));
-    route.setEndingLocation(new Location(2, "Jornal O Povo", new Point(-3.7392711214378163, -38.52481484413147 )));
-    route.addStep( new Stop("Efras" , new Point(-3.743499979657115 , -38.53038311004639 ) ) );
-    route.addStep( new Stop("Efras" , new Point(-3.742129617710173 , -38.54128360748291 ) ) );
+    route.setStartingLocation( new Location( 2 ));
+    route.setEndingLocation(new Location(3 ));
+    route.addStep( new Stop( 1 ,"Efras" , new Point(-3.743499979657115 , -38.53038311004639 ) ) );
+    route.addStep( new Stop( 0 , "Efras" , new Point(-3.742129617710173 , -38.54128360748291 ) ) );
     route.setDriver( new Driver(1) );
     route = service.create( route );
 

@@ -1,3 +1,7 @@
 <dataset>
     <location id="1" name="Bob's Home" point="SRID=3857;POINT(-3.743499979657115 -38.53038311004639)"    />
+    <location id="2" name="Extra" point="SRID=3857;POINT(-3.7488101119391994 -38.52359712123871)"    />
+    <location id="3" name="Povo" point="SRID=3857;POINT(-3.739624419234839 -38.524965047836304)"    />
+
+    <driver id="1" name="Bob" home_location_id="1" />
 </dataset>
