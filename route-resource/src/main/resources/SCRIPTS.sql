@@ -15,11 +15,12 @@ alter table public.route add constraint fk_route_driver foreign key ( driver_id 
 
 
 
-drop table if exists public.stop
+drop table if exists public.stop;
 create table public.stop
 (
   id bigserial primary key
   ,route_id bigint not null
+  ,passenger varchar(200) not null
   ,stop_order int not null
   ,point geometry(POINT,3857) not null
 );

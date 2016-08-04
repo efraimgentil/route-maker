@@ -26,11 +26,12 @@ public class Route {
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("Route{");
-    sb.append("date=").append(date);
+    sb.append("startingLocation=").append(startingLocation);
     sb.append(", id=").append(id);
-    sb.append(", startingLocation=").append(startingLocation);
     sb.append(", endingLocation=").append(endingLocation);
-    sb.append(", stops=").append(stops);
+    sb.append(", driver=").append(driver);
+    sb.append(", date=").append(date);
+    sb.append(", createdAt=").append(createdAt);
     sb.append('}');
     return sb.toString();
   }
@@ -72,4 +73,11 @@ public class Route {
     this.driver = driver;
   }
 
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
+  }
 }

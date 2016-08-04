@@ -48,9 +48,9 @@ public class RouteController {
   }
 
   @RequestMapping(value = { "/" , "" } , method = RequestMethod.POST )
-  public Location insert( @RequestBody @Validated Location location , BindingResult result){
+  public Route insert( @RequestBody @Validated  Route route , BindingResult result){
     if(result.hasErrors()) throw new InvalidaModelException( result );
-    return routeService.create(location);
+    return routeService.create(route);
   }
 
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.PUT )

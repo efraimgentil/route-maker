@@ -39,48 +39,7 @@ public class RouteService {
     JsonNode jsonRoute = directionService.callGoogleService(route);
     List<Stop> orderedStops  = orderStops(jsonRoute, route.getStops());
     route.setStops( orderedStops );
-
-    final String insertIntoSql = "INSERT INTO public.route ( date ,  starting_location_id , ending_location_id " +
-            ", driver_id , created_at ) VALUES ( ? , ? , ? , ? , now() )";
-    KeyHolder keyHolder = new GeneratedKeyHolder();
-    jdbcTemplate.update(
-            new PreparedStatementCreator() {
-              public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                PreparedStatement ps = con.prepareStatement(insertIntoSql, new String[]{"id"});
-                ps.setDate(1, new Date( route.getDate().getTime() ) );
-                ps.setInt(2, route.getStartingLocation().getId());
-                ps.setInt(3, route.getEndingLocation().getId());
-                ps.setInt(4, route.getDriver().getId());
-                return ps;
-              }
-            }, keyHolder);
-    route.setId(keyHolder.getKey().longValue() );
-    saveStops( route );
-
-
     return route;
-  }
-
-  private void saveStops(Route route) {
-    List<Stop> stops = route.getStops();
-
-    final String insertIntoSql = "INSERT INTO public.stop ( date ,  starting_location_id , ending_location_id " +
-            ", driver_id , created_at ) VALUES ( ? , ? , ? , ? , now() )";
-    for(Stop stop : stops ){
-      KeyHolder keyHolder = new GeneratedKeyHolder();
-      jdbcTemplate.update(
-              new PreparedStatementCreator() {
-                public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                  PreparedStatement ps = con.prepareStatement(insertIntoSql, new String[]{"id"});
-                  ps.setDate(1, new Date( route.getDate().getTime() ) );
-                  ps.setInt(2, route.getStartingLocation().getId());
-                  ps.setInt(3, route.getEndingLocation().getId());
-                  ps.setInt(4, route.getDriver().getId());
-                  return ps;
-                }
-              }, keyHolder);
-      route.setId(keyHolder.getKey().longValue() );
-    }
   }
 
   @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -110,21 +69,49 @@ public class RouteService {
   }
 
   @Transactional
-  public Location create(final Location location) {
-    final String insertIntoSql = "INSERT INTO public.location ( name , point ) VALUES ( ? , GeomFromEWKT(?)  )";
+  public Route create(final Route route) {
+    final String insertIntoSql = "INSERT INTO public.route ( date ,  starting_location_id , ending_location_id " +
+            ", driver_id , created_at ) VALUES ( ? , ? , ? , ? , now() )";
     KeyHolder keyHolder = new GeneratedKeyHolder();
     jdbcTemplate.update(
             new PreparedStatementCreator() {
               public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
                 PreparedStatement ps = con.prepareStatement(insertIntoSql, new String[]{"id"});
-                ps.setString(1, location.getName());
-                ps.setString(2, location.getPoint().toGeom());
+                ps.setDate(1, new Date( route.getDate().getTime() ) );
+                ps.setInt(2, route.getStartingLocation().getId());
+                ps.setInt(3, route.getEndingLocation().getId());
+                ps.setInt(4, route.getDriver().getId());
                 return ps;
               }
             }, keyHolder);
-    location.setId(keyHolder.getKey().intValue());
-    return location;
+    route.setId(keyHolder.getKey().longValue());
+    saveStops(route);
+    return route;
   }
+
+  private void saveStops(Route route) {
+    List<Stop> stops = route.getStops();
+
+    final String insertIntoSql = "INSERT INTO public.stop ( route_id ,  stop_order , passenger , point ) " +
+            " VALUES ( ? , ? , ? , GeomFromEWKT(?) )";
+    for(final Stop stop : stops ){
+      stop.setRouteId( route.getId() );
+      KeyHolder keyHolder = new GeneratedKeyHolder();
+      jdbcTemplate.update(
+              new PreparedStatementCreator() {
+                public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                  PreparedStatement ps = con.prepareStatement(insertIntoSql, new String[]{"id"});
+                  ps.setLong(1, stop.getRouteId() );
+                  ps.setInt(2, stop.getOrder() );
+                  ps.setString(3, stop.getPassenger());
+                  ps.setString(4, stop.getPoint().toGeom());
+                  return ps;
+                }
+              }, keyHolder);
+      stop.setId(keyHolder.getKey().longValue() );
+    }
+  }
+
 
   protected Location mountLocation(ResultSet rs) throws SQLException {
     Location location = new Location();

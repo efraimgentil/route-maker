@@ -27,7 +27,7 @@ public class DatabaseConfig {
   }
 
 
-  @Bean
+  @Bean(name="postgresDatabase")
   public DataSource dataSource( @Qualifier("database") ResourceBundle env ) {
     HikariDataSource ds = new HikariDataSource();
     ds.setDriverClassName("org.postgresql.Driver");
