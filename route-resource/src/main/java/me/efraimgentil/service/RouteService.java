@@ -2,10 +2,8 @@ package me.efraimgentil.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import me.efraimgentil.exception.NotFoundException;
-import me.efraimgentil.model.Location;
-import me.efraimgentil.model.Point;
-import me.efraimgentil.model.Route;
-import me.efraimgentil.model.Stop;
+import me.efraimgentil.model.*;
+import me.efraimgentil.model.Driver;
 import org.postgis.PGgeometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -42,27 +40,52 @@ public class RouteService {
     return route;
   }
 
-  @Transactional(propagation = Propagation.NOT_SUPPORTED)
-  public List<Location> locations() {
-    final List<Location> locations = new ArrayList<>();
-    jdbcTemplate.query("SELECT * FROM location", new Object[]{}, new RowCallbackHandler() {
-      @Override
-      public void processRow(ResultSet rs) throws SQLException {
-        locations.add(mountLocation(rs));
-      }
+  protected List<Stop> orderStops(JsonNode routeNode, List<Stop> stops) {
+    final List<Stop> orderedStops = new ArrayList<>();
+    //if( !routeNode.has("waypoint_order") ) throw new NoWayPointOrderException();
+    for (JsonNode n : routeNode.get("waypoint_order")) {
+      Stop stop = stops.get(n.asInt());
+      stop.setOrder( n.asInt() );
+      orderedStops.add( stop );
+    }
+    return orderedStops;
+  }
+
+  @Transactional(propagation = Propagation.REQUIRED)
+  public List<Route> routes() {
+    final List<Route> routes = new ArrayList<>();
+    final String sql = "SELECT r.*" +
+            " , d.id as d_id , d.name as d_name , d.home_location_id as d_home_location_id" +
+            " , start.id as start_id , start.name as start_name , start.point as start_point , start.point_name as start_point_name , start.private as start_private " +
+            " , ending.id as ending_id , ending.name as ending_name , ending.point as ending_point , ending.point_name as ending_point_name , ending.private as ending_private " +
+            " FROM route r" +
+            "  left JOIN location start on start.id = r.starting_location_id " +
+            "  left JOIN location ending on ending.id = r.ending_location_id " +
+            "  left JOIN driver d on d.id = r.driver_id";
+    jdbcTemplate.query(sql, new Object[]{}, (RowCallbackHandler) (ResultSet rs) -> {
+        routes.add( mountRoute( rs ) );
     });
-    return locations;
+    return routes;
   }
 
   @Transactional(propagation = Propagation.NOT_SUPPORTED)
-  public Location get(int id) {
+  public Route get(long id) {
     try {
-      Location location = jdbcTemplate.queryForObject("SELECT * FROM location WHERE id = ?", new Object[]{id}, new RowMapper<Location>() {
-        public Location mapRow(ResultSet rs, int rowNum) throws SQLException {
-          return mountLocation(rs);
+      final String sql = "SELECT r.*" +
+              " , d.id as d_id , d.name as d_name , d.home_location_id as d_home_location_id" +
+              " , start.id as start_id , start.name as start_name , start.point as start_point , start.point_name as start_point_name , start.private as start_private " +
+              " , ending.id as ending_id , ending.name as ending_name , ending.point as ending_point , ending.point_name as ending_point_name , ending.private as ending_private " +
+              " FROM route r" +
+              "  left JOIN location start on start.id = r.starting_location_id " +
+              "  left JOIN location ending on ending.id = r.ending_location_id " +
+              "  left JOIN driver d on d.id = r.driver_id" +
+              " WHERE r.id = ?";
+      Route route = jdbcTemplate.queryForObject( sql , new Object[]{id}, new RowMapper<Route>() {
+        public Route mapRow(ResultSet rs, int rowNum) throws SQLException {
+          return mountRoute(rs);
         }
       });
-      return location;
+      return route;
     } catch (EmptyResultDataAccessException erdae) {
       throw new NotFoundException();
     }
@@ -112,16 +135,6 @@ public class RouteService {
     }
   }
 
-
-  protected Location mountLocation(ResultSet rs) throws SQLException {
-    Location location = new Location();
-    location.setId(rs.getInt("id"));
-    location.setName(rs.getString("name"));
-    location.setGeom((PGgeometry) rs.getObject("point"));
-    location.setPoint(new Point(location.getGeom()));
-    return location;
-  }
-
   @Transactional
   public Location update(Location location) {
     String sql = "UPDATE location SET name = ? , point = GeomFromEWKT(?) WHERE id = ?";
@@ -131,23 +144,41 @@ public class RouteService {
   }
 
   @Transactional
-  public Location delete(Integer id){
-    Location location = get(id);
+  public Route delete(Integer id){
+    Route route = get(id);
     String sql = "DELETE FROM location WHERE id = ?";
     int update = jdbcTemplate.update(sql, new Object[]{id});
     if(update <= 0 ) throw new NotFoundException();
+    return route;
+  }
+
+  protected Route mountRoute(ResultSet rs) throws SQLException {
+    Route r = new Route();
+    r.setId( rs.getLong("id") );
+    r.setDate( rs.getDate("date") );
+    r.setCreatedAt( rs.getDate("created_at") );
+    r.setDriver( mountDriver(rs) );
+    r.setStartingLocation( mountLocation( rs , "start_" ) );
+    r.setEndingLocation(mountLocation(rs, "ending_" ) );
+    return r;
+  }
+
+  protected Driver mountDriver(ResultSet rs) throws SQLException {
+    Driver d = new Driver();
+    d.setId( rs.getInt("d_id") );
+    d.setName( rs.getString("d_name") );
+    d.setLocationId(rs.getInt("d_home_location_id") );
+    return d;
+  }
+
+  protected Location mountLocation(ResultSet rs, String prefix) throws SQLException {
+    Location location = new Location();
+    location.setId(rs.getInt(prefix + "id"));
+    location.setName(rs.getString(prefix + "name"));
+    location.setGeom((PGgeometry) rs.getObject( prefix + "point"));
+    location.setPoint(new Point(location.getGeom()));
     return location;
   }
 
-  protected List<Stop> orderStops(JsonNode routeNode, List<Stop> stops) {
-    final List<Stop> orderedStops = new ArrayList<>();
-    //if( !routeNode.has("waypoint_order") ) throw new NoWayPointOrderException();
-    for (JsonNode n : routeNode.get("waypoint_order")) {
-      Stop stop = stops.get(n.asInt());
-      stop.setOrder( n.asInt() );
-      orderedStops.add( stop );
-    }
-    return orderedStops;
-  }
 
 }

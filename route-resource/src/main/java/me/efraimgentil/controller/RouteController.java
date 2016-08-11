@@ -38,12 +38,12 @@ public class RouteController {
   }
 
   @RequestMapping(value = { "/" , "" } , method =  RequestMethod.GET)
-  public List<Location> locations(){
-    return routeService.locations();
+  public List<Route> route(){
+    return routeService.routes();
   }
 
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.GET)
-  public Location location(@PathVariable("id") Integer id ){
+  public Route route(@PathVariable("id") Integer id ){
     return routeService.get(id);
   }
 
@@ -60,7 +60,7 @@ public class RouteController {
   }
 
   @RequestMapping(value = { "/{id}" , "/{id}/" } , method = RequestMethod.DELETE )
-  public Location delete( @PathVariable("id") Integer id ){
+  public Route delete( @PathVariable("id") Integer id ){
     return routeService.delete(id);
   }
 

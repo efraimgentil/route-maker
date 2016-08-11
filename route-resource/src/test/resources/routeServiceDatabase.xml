@@ -4,4 +4,6 @@
     <location id="3" name="Povo" point="SRID=3857;POINT(-3.739624419234839 -38.524965047836304)"    />
 
     <driver id="1" name="Bob" home_location_id="1" />
+
+    <route id="1" date="2016-01-01" created_at="2016-01-01 08:30:30" driver_id="1" starting_location_id="3" ending_location_id="2" />
 </dataset>

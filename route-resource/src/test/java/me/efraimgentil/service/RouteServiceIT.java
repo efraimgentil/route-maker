@@ -3,7 +3,6 @@ package me.efraimgentil.service;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.*;
 import me.efraimgentil.DBUnitConfig;
-import me.efraimgentil.config.DatabaseConfig;
 import me.efraimgentil.config.SpringConfig;
 import me.efraimgentil.exception.NotFoundException;
 import me.efraimgentil.model.*;
@@ -49,8 +48,8 @@ public class RouteServiceIT {
   @Test
   public void doesInsertANewLoctation(){
     Route route = new Route();
-    route.setDate( new Date() );
-    route.setStartingLocation( new Location( 2 ));
+    route.setDate(new Date());
+    route.setStartingLocation(new Location(2));
     route.setEndingLocation( new Location(3 ));
     route.addStep( new Stop( 1 ,"Efras" , new Point(-3.743499979657115 , -38.53038311004639 ) ) );
     route.addStep( new Stop( 0 , "Efras" , new Point(-3.742129617710173 , -38.54128360748291 ) ) );
@@ -60,42 +59,67 @@ public class RouteServiceIT {
     assertNotNull( route.getId() );
   }
 
-  @Rollback(true)
-  @Transactional
   @Test
-  public void doesUpdateAnExistingLocation(){
-    Location l = new Location();
-    l.setId( 1 );
-    l.setName("Home 2222");
-    l.setPoint( new Point( 5.0 , 6.0 ) );
+  public void doesQueryAllRoutesWithStartingEndingAndDriverInformation(){
+    List<Route> routes = service.routes();
 
-    Location location = service.update(l);
-  }
-
-  @Test
-  public void doesQueryAllLocations(){
-    List<Location> locations = service.locations();
-
-    assertFalse( locations.isEmpty() );
-    for( Location l : locations){
-      assertNotNull(l.getId() );
-      assertNotNull(l.getName() );
-      assertNotNull(l.getGeom() );
-      assertNotNull(l.getPoint() );
+    assertNotNull(routes);
+    assertFalse(routes.isEmpty());
+    for( Route r : routes ){
+      assertNotNull(r.getStartingLocation());
+      assertEquals(new Integer(3), r.getStartingLocation().getId());
+      assertNotNull( r.getStartingLocation().getPoint() );
+      assertNotNull( r.getEndingLocation() );
+      assertEquals( new Integer(2 ) , r.getEndingLocation().getId() );
+      assertNotNull( r.getEndingLocation().getPoint() );
+      assertNotNull( r.getDriver() );
+      assertEquals( new Integer( 1 ) , r.getDriver().getId() );
+      assertNotNull( r.getDriver().getName() ) ;
     }
   }
 
   @Test
-  public void doesReturnTheLocationOfTheSpecifiedId(){
-    Location location = service.get(1);
+  public void doesReturnTheRouteOfTheSpecifiedId(){
+    Route r = service.get(1);
 
-    assertNotNull(location);
+    assertNotNull(r);
+    assertNotNull(r.getStartingLocation());
+    assertEquals(new Integer(3), r.getStartingLocation().getId());
+    assertNotNull( r.getStartingLocation().getPoint() );
+    assertNotNull( r.getEndingLocation() );
+    assertEquals( new Integer(2 ) , r.getEndingLocation().getId() );
+    assertNotNull( r.getEndingLocation().getPoint() );
+    assertNotNull( r.getDriver() );
+    assertEquals( new Integer( 1 ) , r.getDriver().getId() );
+    assertNotNull( r.getDriver().getName() ) ;
+  }
+  
+  @Rollback(true)
+  @Test
+  @Transactional
+  public void doesSuccesfullyDeleteARoute(){
+    Route r = service.get(1L);
+
+    assertNotNull(r);
   }
 
   @Test(expected = NotFoundException.class)
   public void doesThrowNotFoundExceptionWhenThereIsNoLocationWithTheSpecifiedId(){
-    Location location = service.get(99999);
-    assertNotNull(location);
+    Route route = service.get(99999);
   }
+
+/*  @Rollback(true)
+  @Transactional
+  @Test
+  public void doesUpdateAnExistingLocation(){
+    Location l = new Location();
+    l.setId(1);
+    l.setName("Home 2222");
+    l.setPoint( new Point( 5.0 , 6.0 ) );
+
+    Location location = service.update(l);
+  }*/
+
+
 
 }
