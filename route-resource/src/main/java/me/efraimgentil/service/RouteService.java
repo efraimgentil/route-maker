@@ -45,7 +45,7 @@ public class RouteService {
   @Transactional(propagation = Propagation.NOT_SUPPORTED)
   public List<Location> locations() {
     final List<Location> locations = new ArrayList<>();
-    jdbcTemplate.query("SELECT * FROM public.location", new Object[]{}, new RowCallbackHandler() {
+    jdbcTemplate.query("SELECT * FROM location", new Object[]{}, new RowCallbackHandler() {
       @Override
       public void processRow(ResultSet rs) throws SQLException {
         locations.add(mountLocation(rs));
@@ -57,7 +57,7 @@ public class RouteService {
   @Transactional(propagation = Propagation.NOT_SUPPORTED)
   public Location get(int id) {
     try {
-      Location location = jdbcTemplate.queryForObject("SELECT * FROM public.location WHERE id = ?", new Object[]{id}, new RowMapper<Location>() {
+      Location location = jdbcTemplate.queryForObject("SELECT * FROM location WHERE id = ?", new Object[]{id}, new RowMapper<Location>() {
         public Location mapRow(ResultSet rs, int rowNum) throws SQLException {
           return mountLocation(rs);
         }
@@ -70,7 +70,7 @@ public class RouteService {
 
   @Transactional
   public Route create(final Route route) {
-    final String insertIntoSql = "INSERT INTO public.route ( date ,  starting_location_id , ending_location_id " +
+    final String insertIntoSql = "INSERT INTO route ( date ,  starting_location_id , ending_location_id " +
             ", driver_id , created_at ) VALUES ( ? , ? , ? , ? , now() )";
     KeyHolder keyHolder = new GeneratedKeyHolder();
     jdbcTemplate.update(
@@ -92,7 +92,7 @@ public class RouteService {
   private void saveStops(Route route) {
     List<Stop> stops = route.getStops();
 
-    final String insertIntoSql = "INSERT INTO public.stop ( route_id ,  stop_order , passenger , point ) " +
+    final String insertIntoSql = "INSERT INTO stop ( route_id ,  stop_order , passenger , point ) " +
             " VALUES ( ? , ? , ? , GeomFromEWKT(?) )";
     for(final Stop stop : stops ){
       stop.setRouteId( route.getId() );
@@ -124,7 +124,7 @@ public class RouteService {
 
   @Transactional
   public Location update(Location location) {
-    String sql = "UPDATE public.location SET name = ? , point = GeomFromEWKT(?) WHERE id = ?";
+    String sql = "UPDATE location SET name = ? , point = GeomFromEWKT(?) WHERE id = ?";
     int update = jdbcTemplate.update(sql, new Object[]{location.getName(), location.getPoint().toGeom(), location.getId()});
     if(update <= 0 ) throw new NotFoundException();
     return location;
@@ -133,7 +133,7 @@ public class RouteService {
   @Transactional
   public Location delete(Integer id){
     Location location = get(id);
-    String sql = "DELETE FROM public.location WHERE id = ?";
+    String sql = "DELETE FROM location WHERE id = ?";
     int update = jdbcTemplate.update(sql, new Object[]{id});
     if(update <= 0 ) throw new NotFoundException();
     return location;

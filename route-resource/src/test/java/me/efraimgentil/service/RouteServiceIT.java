@@ -1,9 +1,7 @@
 package me.efraimgentil.service;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
-import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.github.springtestdbunit.annotation.DatabaseSetups;
-import com.github.springtestdbunit.annotation.DbUnitConfiguration;
+import com.github.springtestdbunit.annotation.*;
 import me.efraimgentil.DBUnitConfig;
 import me.efraimgentil.config.DatabaseConfig;
 import me.efraimgentil.config.SpringConfig;
@@ -21,7 +19,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.Date;
 
@@ -31,55 +28,36 @@ import static org.junit.Assert.*;
  * Created by efraimgentil<efraimgentil@gmail.com> on 14/07/16.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {SpringConfig.class , DatabaseConfig.class , DBUnitConfig.class })
+@ContextConfiguration(classes = {SpringConfig.class ,  DBUnitConfig.class })
 @TestExecutionListeners({
-        DependencyInjectionTestExecutionListener.class
-        , TransactionalTestExecutionListener.class
-        ,DbUnitTestExecutionListener.class
+     DependencyInjectionTestExecutionListener.class
+   , TransactionalTestExecutionListener.class
+   , DbUnitTestExecutionListener.class
 })
-@TransactionConfiguration
 @DatabaseSetups({
-  @DatabaseSetup(  value = "classpath:routeServiceDatabase.xml" )
+  @DatabaseSetup(  value = "classpath:routeServiceDatabase.xml"  ,type =  DatabaseOperation.CLEAN_INSERT)
 })
+@DatabaseTearDown(value={"classpath:routeServiceDatabaseTearDown.xml"}, type = DatabaseOperation.DELETE )
+@TransactionConfiguration
 public class RouteServiceIT {
-
-  @Autowired
-  DataSource dataSource;
 
   @Autowired
   RouteService service;
 
-
-/*  @Test
-  public void does() throws SQLException {
-    try(Connection conn = dataSource.getConnection()){
-      ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM public.location");
-      while(rs.next()){
-        System.out.println( rs.getObject("point") );
-        PGgeometry geom = (PGgeometry)rs.getObject("point");
-        System.out.println(geom.toString());
-        System.out.println(geom.getValue());
-        System.out.println(geom.getType());
-        System.out.println(geom.getGeoType());
-        System.out.println(geom.getGeometry());
-      }
-    }
-  }*/
-
   @Rollback(true)
   @Transactional
   @Test
-  public void doesInsertANewLocation(){
+  public void doesInsertANewLoctation(){
     Route route = new Route();
     route.setDate( new Date() );
     route.setStartingLocation( new Location( 2 ));
-    route.setEndingLocation(new Location(3 ));
+    route.setEndingLocation( new Location(3 ));
     route.addStep( new Stop( 1 ,"Efras" , new Point(-3.743499979657115 , -38.53038311004639 ) ) );
     route.addStep( new Stop( 0 , "Efras" , new Point(-3.742129617710173 , -38.54128360748291 ) ) );
     route.setDriver( new Driver(1) );
     route = service.create( route );
 
-    assertNotNull(route.getId() );
+    assertNotNull( route.getId() );
   }
 
   @Rollback(true)
