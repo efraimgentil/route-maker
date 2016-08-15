@@ -23,6 +23,10 @@ public class Route {
     stops.add( stop );
   }
 
+  public Stop getLastStop(){
+    return  stops.get( stops.size() - 1 );
+  }
+
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("Route{");

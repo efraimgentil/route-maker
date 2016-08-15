@@ -6,14 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.Errors;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
@@ -75,17 +68,5 @@ public class LocationValidatorTest {
 
     verify( errors , times(1) ).rejectValue( "point" , "field.invalid.point"  );
   }
-
-
-  @Test
-  public void main(){
-    String s = "He is a very very good boy, isn't he?";
-    Matcher matcher = Pattern.compile("[A-Za-z]+").matcher(s);
-    while( matcher.find() ) {
-      System.out.println(matcher.group());
-    }
-  }
-
-
 
 }

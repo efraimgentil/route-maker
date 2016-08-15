@@ -39,7 +39,12 @@ public class RouteService {
     return route;
   }
 
-  public Driver nearestDriver( Point point ){
+  public Driver suggestADriver(final Route route){
+    Route orderedRoute = createRoute(route); //Create a route to order the stops
+    return nearestDriver( orderedRoute.getLastStop().getPoint() );
+  }
+
+  protected Driver nearestDriver( Point point ){
     final  String sql = "select d.id as d_id , d.name as d_name , d.home_location_id as d_home_location_id"
             + " from driver d inner join location l on l.id = d.home_location_id"
             + " ORDER BY l.point <-> GeomFromEWKT(?) LIMIT 1";
