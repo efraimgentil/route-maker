@@ -76,11 +76,9 @@ public class Route {
   public void setDriver(Driver driver) {
     this.driver = driver;
   }
-
   public Date getCreatedAt() {
     return createdAt;
   }
-
   public void setCreatedAt(Date createdAt) {
     this.createdAt = createdAt;
   }

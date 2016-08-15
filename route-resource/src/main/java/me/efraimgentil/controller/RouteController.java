@@ -31,10 +31,8 @@ public class RouteController {
 
 
   @RequestMapping(value = { "/suggest-driver" , "/suggest-driver/" } , method =  RequestMethod.POST)
-  public Driver sugestDriver( @RequestBody @Validated Route route ){
-
-
-    return null;
+  public Driver sugestDriver( @RequestBody Route route ){
+    return routeService.suggestADriver( route );
   }
 
   @RequestMapping(value = { "/" , "" } , method =  RequestMethod.GET)

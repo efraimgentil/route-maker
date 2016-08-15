@@ -1,6 +1,6 @@
 angular.module( moduleName ).controller("RouteFormController" , [
-  "$scope" , "MapService" , "$location",
-  function($scope,  MapService , $location ){
+  "$scope" , "RouteService" ,
+  function($scope,  RouteService  ){
     var self = this;
     $scope.state = "formRoute";
     self.locationVarName= "";
@@ -43,6 +43,12 @@ angular.module( moduleName ).controller("RouteFormController" , [
     $scope.selectDriverAndBackToRoute = function(driver){
       $scope.route.driver = driver;
       $scope.backToRouteForm();
+    }
+
+    $scope.suggestDriver = function(){
+      RouteService.suggestDriver( $scope.route , function(response){
+        $scope.route.driver = response.data;
+      } );
     }
 
     $scope.addStop = function( stop ){
