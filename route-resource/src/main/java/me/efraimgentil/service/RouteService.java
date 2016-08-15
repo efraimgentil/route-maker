@@ -35,9 +35,16 @@ public class RouteService {
 
   public Route createRoute(final Route route ){
     JsonNode jsonRoute = directionService.callGoogleService(route);
-    List<Stop> orderedStops  = orderStops(jsonRoute, route.getStops());
-    route.setStops( orderedStops );
+    route.setStops( orderStops(jsonRoute, route.getStops()) );
     return route;
+  }
+
+  public Driver nearestDriver( Point point ){
+    final  String sql = "select d.id as d_id , d.name as d_name , d.home_location_id as d_home_location_id"
+            + " from driver d inner join location l on l.id = d.home_location_id"
+            + " ORDER BY l.point <-> GeomFromEWKT(?) LIMIT 1";
+    return jdbcTemplate.queryForObject(sql, new Object[]{point.toGeom()}
+            , (rs, rowNum) -> mountDriver(rs));
   }
 
   protected List<Stop> orderStops(JsonNode routeNode, List<Stop> stops) {

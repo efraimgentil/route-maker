@@ -108,6 +108,15 @@ public class RouteServiceIT {
     Route route = service.get(99999);
   }
 
+
+  @Test
+  public void doesReturnTheDriverWhoLivesNearestThePoint(){
+    Point p = new Point(-3.7604794425063166 , -38.51583480834961 );
+    Driver driver = service.nearestDriver(p);
+
+    assertNotNull( driver );
+    assertEquals("Should have been the driver 2 Mike", new Integer(2) , driver.getId()  );
+  }
 /*  @Rollback(true)
   @Transactional
   @Test
