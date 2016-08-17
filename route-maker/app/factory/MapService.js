@@ -46,7 +46,7 @@ angular.module(moduleName).factory("MapService", function () {
     }
   };
 
-  mapService.findPlaceByName = function (address, callback) {
+  mapService.findPlaceByName = function (address, callback) {map
     geocoder.geocode({'address': address}, function (results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         callback(results[0]);

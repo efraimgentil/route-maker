@@ -1,5 +1,7 @@
 package me.efraimgentil.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,13 +18,18 @@ public class Route {
   private Location endingLocation;
   private Driver driver;
   private List<Stop> stops = new ArrayList<>();
+  private String routeJson;
+
+  private boolean routeMounted;
 
   public Route() {  }
 
+  @JsonIgnore
   public void addStep(Stop stop){
     stops.add( stop );
   }
 
+  @JsonIgnore
   public Stop getLastStop(){
     return  stops.get( stops.size() - 1 );
   }
@@ -81,5 +88,19 @@ public class Route {
   }
   public void setCreatedAt(Date createdAt) {
     this.createdAt = createdAt;
+  }
+  public boolean isRouteMounted() {
+    return routeMounted;
+  }
+  public void setRouteMounted(boolean routeMounted) {
+    this.routeMounted = routeMounted;
+  }
+
+  public String getRouteJson() {
+    return routeJson;
+  }
+
+  public void setRouteJson(String routeJson) {
+    this.routeJson = routeJson;
   }
 }

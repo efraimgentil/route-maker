@@ -79,9 +79,25 @@
 
 
         <div class="form-group col-sm-8 col-md-8 col-sm-6  col-xs-12">
-        </div>
 
+          <div class="tooltip-wrapper" title="{{route.startingLocation.id == null || route.endingLocation.id == null ?
+           'To show the preview of the route you have to at least select the starting location and the ending location'
+           : 'Preview the route drawing it in the map' }}" tooltip >
+            <button class="btn btn-info btn-sm" type="button" ng-click="previewRoute()"
+               ng-disabled="route.startingLocation.id == null || route.endingLocation.id == null"
+               >Preview Route</button>
+          </div>
+        </div>
       </div>
+
+      <div class="row" style="margin-bottom:15px;">
+        <div class="col-sm-12">
+          <div class="map-container">
+            <div id="map"></div>
+          </div>
+        </div>
+      </div>
+
       <div class="form-group">
         <button class="btn btn-success btn-sm" type="submit" ng-disabled="form.$invalid">Save</button>
         <button class="btn btn-danger btn-sm" ng-click="cancel()">Cancel</button>

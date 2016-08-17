@@ -36,12 +36,14 @@ public class RouteService {
   public Route createRoute(final Route route ){
     JsonNode jsonRoute = directionService.callGoogleService(route);
     route.setStops( orderStops(jsonRoute, route.getStops()) );
+    route.setRouteMounted( true );
+    route.setRouteJson( jsonRoute.toString() );
     return route;
   }
 
   public Driver suggestADriver(final Route route){
     Route orderedRoute = createRoute(route); //Create a route to order the stops
-    return nearestDriver( orderedRoute.getLastStop().getPoint() );
+    return nearestDriver(orderedRoute.getLastStop().getPoint() );
   }
 
   protected Driver nearestDriver( Point point ){

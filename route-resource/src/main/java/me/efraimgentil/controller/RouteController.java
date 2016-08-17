@@ -35,6 +35,11 @@ public class RouteController {
     return routeService.suggestADriver( route );
   }
 
+  @RequestMapping(value = { "/mount-route" , "/mount-route/" } , method =  RequestMethod.POST)
+  public Route mountRoute( @RequestBody Route route ){
+    return routeService.createRoute( route );
+  }
+
   @RequestMapping(value = { "/" , "" } , method =  RequestMethod.GET)
   public List<Route> route(){
     return routeService.routes();

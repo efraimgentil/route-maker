@@ -131,7 +131,7 @@ public class DriverService {
     Driver driver = new Driver();
     driver.setId(rs.getInt("id"));
     driver.setName(rs.getString("name"));
-    driver.setLocationId(rs.getInt("location_id"));
+    driver.setLocationId(rs.getInt("home_location_id"));
     return driver;
   }
 

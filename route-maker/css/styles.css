@@ -12,3 +12,14 @@ body{
 .error-text{
   color: red;
 }
+
+.tooltip-wrapper{
+  display: inline-block;
+}
+
+button:disabled{
+  pointer-events: none;
+}
+.tooltip{
+  font-size: 18px;
+}

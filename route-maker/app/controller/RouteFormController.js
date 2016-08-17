@@ -1,12 +1,14 @@
 angular.module( moduleName ).controller("RouteFormController" , [
-  "$scope" , "RouteService" ,
-  function($scope,  RouteService  ){
+  "$scope" , "RouteService" , "MapFactory", "$routeParams" ,
+  function($scope,  RouteService  , MapFactory  , $routeParams){
     var self = this;
     $scope.state = "formRoute";
     self.locationVarName= "";
+    self.mapService = null;
 
     $scope.init = function(){
       $scope.route = { startingLocation: {} , endingLocation: { } , stops : [] };
+      self.mapService = MapFactory.initializeMap( $("#map")[0] , null , null , { height : 300 } , function(){ } );
     }
 
     $scope.new = function(){
@@ -21,6 +23,7 @@ angular.module( moduleName ).controller("RouteFormController" , [
     $scope.prepareSelectLocation = function(locationVarName){
       $scope.state = "selectLocation";
       self.locationVarName = locationVarName;
+
     }
 
     $scope.backToRouteForm = function(){
@@ -58,6 +61,13 @@ angular.module( moduleName ).controller("RouteFormController" , [
 
     $scope.prepareAddStop = function(){
       $scope.state = "formStop";
+    }
+
+    $scope.previewRoute = function(){
+      RouteService.mountRoute( $scope.route , function(response){
+        console.log(response.data);
+        RouteService.drawRoute( response.data , self.mapService );
+      });
     }
 
   }
