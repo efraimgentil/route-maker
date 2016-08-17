@@ -108,7 +108,7 @@ public class RouteService {
   @Transactional
   public Route create(final Route route) {
     final String insertIntoSql = "INSERT INTO route ( date ,  starting_location_id , ending_location_id " +
-            ", driver_id , created_at ) VALUES ( ? , ? , ? , ? , now() )";
+            ", driver_id , route_json , created_at ) VALUES ( ? , ? , ? , ? , ? , now() )";
     KeyHolder keyHolder = new GeneratedKeyHolder();
     jdbcTemplate.update(
             new PreparedStatementCreator() {
@@ -118,6 +118,7 @@ public class RouteService {
                 ps.setInt(2, route.getStartingLocation().getId());
                 ps.setInt(3, route.getEndingLocation().getId());
                 ps.setInt(4, route.getDriver().getId());
+                ps.setString( 5, route.getRouteJson() );
                 return ps;
               }
             }, keyHolder);

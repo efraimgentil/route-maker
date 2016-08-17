@@ -26,3 +26,4 @@ create table public.stop
 );
 
 alter table public.stop add constraint fk_stop_route foreign key ( route_id ) references public.route( id );
+alter table public.route add column route_json text;

@@ -1,10 +1,10 @@
 angular.module( moduleName ).controller("RouteListController" , [
-  "$scope" , "DriverService" , "$location",
-  function($scope,  DriverService , $location ){
+  "$scope" , "RouteService" , "$location",
+  function($scope,  RouteService , $location ){
 
     $scope.init = function(){
-      DriverService.query({} , function(data){
-        $scope.drivers = data;
+      RouteService.query({} , function(data){
+        $scope.routes = data;
       });
     }
 

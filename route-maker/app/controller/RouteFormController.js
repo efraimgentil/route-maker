@@ -11,8 +11,11 @@ angular.module( moduleName ).controller("RouteFormController" , [
       self.mapService = MapFactory.initializeMap( $("#map")[0] , null , null , { height : 300 } , function(){ } );
     }
 
-    $scope.new = function(){
-        
+    $scope.save = function(){
+      RouteService.save( $scope.route , function(data){
+        console.log( "Rota salva");
+        console.log( data );
+      });
     }
 
     $scope.newLocation = function(locationVarName){
@@ -64,9 +67,14 @@ angular.module( moduleName ).controller("RouteFormController" , [
     }
 
     $scope.previewRoute = function(){
+      console.log( $scope.route );
       RouteService.mountRoute( $scope.route , function(response){
-        console.log(response.data);
+        var route = response.data;
+        route.date = new Date( route.date );// Convert date to a valid format
+        $scope.route = route;
+
         RouteService.drawRoute( response.data , self.mapService );
+
       });
     }
 

@@ -24,7 +24,7 @@ angular.module(moduleName).service("RouteService" , [
       if (model.id) {
         Routes.update(model , callback );
       } else {
-        Routes.save( model,  callback(data) );
+        Routes.save( model,  callback );
       }
     }
 
@@ -34,15 +34,8 @@ angular.module(moduleName).service("RouteService" , [
 
 
     self.drawRoute = function( route , MapService ){
-
-      //parseJsonToReadableRoute( t.routes[0] );
       var route = JSON.parse( route.routeJson );
-      //console.log( route );
       parseJsonToReadableRoute( route );
-      var path = new google.maps.MVCArray();
-      var poly = new google.maps.Polyline({ map: MapService.map , strokeColor: '#000000', strokeOpacity: 1.0, strokeWeight: 4 }); poly.setPath(path);
-
-      // console.log( route.legs );
       var steps = [];
       for( var i = 0 ; i <  route.legs.length ; i++  ){
         var leg = route.legs[i];
@@ -57,44 +50,6 @@ angular.module(moduleName).service("RouteService" , [
         }
       }
       MapService.drawRouteFromSteps( steps );
-      /*function drawSteps( steps ){
-        if(steps.length > 0 ){
-          try{
-            var step =  steps.shift();
-            if(path.getLength() == 0){
-              path.push( step.start_location );
-              MapService.addMarker( "Start Point" ,step.start_location );
-            }
-            MapService.getDirectionService().route({
-              origin: path.getAt(path.getLength() - 1),
-              destination:  step.end_location ,
-              travelMode: google.maps.DirectionsTravelMode.DRIVING
-            }, function(result, status) {
-              if (status == google.maps.DirectionsStatus.OK) {
-                for (var i = 0, len = result.routes[0].overview_path.length; i < len; i++) {
-                  path.push(result.routes[0].overview_path[i]);
-                }
-                if(steps.length > 0) {
-                  if(step.isParada){
-                    MapService.addMarker( "Stop" , step.end_location  );
-                  }
-                  drawSteps(steps);
-                }else{
-                  MapService.addMarker( "Ending Point" , path.getAt( path.length - 1 ) );
-                }
-              }else if( status === "OVER_QUERY_LIMIT"){
-                steps.unshift( step );
-                setTimeout( function(){ drawSteps(steps)  }, 100 );
-              }
-            });
-          }catch(e){
-            console.log(e);
-          }
-        }
-      }
-      //console.log(steps );
-      drawSteps( steps );
-      m = MapService.map;*/
     }
 
     function parseJsonToReadableRoute( json ){
@@ -126,8 +81,6 @@ angular.module(moduleName).service("RouteService" , [
     function isArray( o ){
       return Object.prototype.toString.call( o ) === "[object Array]";
     }
-
-
 
   }
 ]);
