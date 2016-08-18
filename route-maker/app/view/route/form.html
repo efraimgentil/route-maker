@@ -1,6 +1,6 @@
 <div ng-init="init()">
 
-  <page-title-directive title="{{driver.id ? 'Edit' : 'New'}} Route"></page-title-directive>
+  <page-title-directive title="{{route.id ? 'Edit' : 'New'}} Route"></page-title-directive>
 
   <div ng-show="state == 'formRoute'">
     <form name="form" ng-submit="save()" novalidate="novalidate">

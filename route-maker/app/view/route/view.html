@@ -1,0 +1,57 @@
+<div ng-init="init()">
+
+  <page-title-directive title="View Route"></page-title-directive>
+
+  <div >
+    <form name="form" ng-submit="save()" novalidate="novalidate">
+      <div class="row">
+        <div class="form-group col-lg-3 col-md-4 col-sm-6 col-xs-12">
+          <label>Date</label>
+          <input id="date" name="date" type="datetime-local"  ng-model="route.date"
+                 placeholder="yyyy-MM-dd"
+                 class="form-control" ng-disabled="true" />
+        </div>
+
+        <div class="form-group col-lg-9 col-md-9 col-sm-12  col-xs-12">
+          <label>Starting Location</label>
+            <input id="startingLocation" name="startingLocation" ng-model="route.startingLocation.name" class="form-control"
+                   ng-disabled="true"/>
+        </div>
+
+        <div class="form-group col-sm-12 col-md-12 col-sm-12  col-xs-12">
+          <label>Stops</label>
+          <ul>
+            <li ng-repeat="stop in route.stops track by $index">Passenger: {{stop.passenger}}, Stop At: {{stop.pointName}}</li>
+          </ul>
+        </div>
+
+        <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12">
+          <label>Driver</label>
+            <input id="driver" name="driver" ng-model="route.driver.name" class="form-control" ng-disabled="true"/>
+        </div>
+
+        <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12">
+          <label>Ending Location</label>
+            <input id="endingLocation" name="endingLocation" ng-model="route.endingLocation.name" class="form-control"
+                   ng-disabled="true" />
+        </div>
+
+      </div>
+
+      <div class="row" style="margin-bottom:15px;">
+        <div class="col-sm-12">
+          <div class="map-container">
+            <div id="map"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button class="btn btn-success btn-sm" type="submit" >Print</button>
+        <button class="btn btn-danger btn-sm" ng-click="cancel()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+</div>
+

@@ -6,7 +6,6 @@ app.constant("LocationResourceUrl", "http://localhost:8090/:id");
 app.constant("RouteResourceUrl", "http://localhost:8095");
 
 
-
 app.config( function( $routeProvider , $locationProvider) {
 
   $routeProvider
@@ -32,6 +31,10 @@ app.config( function( $routeProvider , $locationProvider) {
     .when('/route/new', {
       templateUrl: 'app/view/route/form.html',
       controller: "RouteFormController"
+    })
+    .when('/route/:id', {
+      templateUrl: 'app/view/route/view.html',
+      controller: "RouteViewController"
     })
     .when('/route/stop', {
       templateUrl: 'app/view/route/stop_form.html'

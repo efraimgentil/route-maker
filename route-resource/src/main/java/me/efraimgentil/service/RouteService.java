@@ -94,11 +94,7 @@ public class RouteService {
               "  left JOIN location ending on ending.id = r.ending_location_id " +
               "  left JOIN driver d on d.id = r.driver_id" +
               " WHERE r.id = ?";
-      Route route = jdbcTemplate.queryForObject( sql , new Object[]{id}, new RowMapper<Route>() {
-        public Route mapRow(ResultSet rs, int rowNum) throws SQLException {
-          return mountRoute(rs);
-        }
-      });
+      Route route = jdbcTemplate.queryForObject( sql , new Object[]{id}, (rs, rowNum) -> mountRoute(rs) );
       return route;
     } catch (EmptyResultDataAccessException erdae) {
       throw new NotFoundException();
@@ -110,17 +106,14 @@ public class RouteService {
     final String insertIntoSql = "INSERT INTO route ( date ,  starting_location_id , ending_location_id " +
             ", driver_id , route_json , created_at ) VALUES ( ? , ? , ? , ? , ? , now() )";
     KeyHolder keyHolder = new GeneratedKeyHolder();
-    jdbcTemplate.update(
-            new PreparedStatementCreator() {
-              public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                PreparedStatement ps = con.prepareStatement(insertIntoSql, new String[]{"id"});
-                ps.setDate(1, new Date( route.getDate().getTime() ) );
-                ps.setInt(2, route.getStartingLocation().getId());
-                ps.setInt(3, route.getEndingLocation().getId());
-                ps.setInt(4, route.getDriver().getId());
-                ps.setString( 5, route.getRouteJson() );
-                return ps;
-              }
+    jdbcTemplate.update( con -> {
+              PreparedStatement ps = con.prepareStatement(insertIntoSql, new String[]{"id"});
+              ps.setDate(1, new Date( route.getDate().getTime() ) );
+              ps.setInt(2, route.getStartingLocation().getId());
+              ps.setInt(3, route.getEndingLocation().getId());
+              ps.setInt(4, route.getDriver().getId());
+              ps.setString( 5, route.getRouteJson() );
+              return ps;
             }, keyHolder);
     route.setId(keyHolder.getKey().longValue());
     saveStops(route);
@@ -130,22 +123,20 @@ public class RouteService {
   private void saveStops(Route route) {
     List<Stop> stops = route.getStops();
 
-    final String insertIntoSql = "INSERT INTO stop ( route_id ,  stop_order , passenger , point ) " +
-            " VALUES ( ? , ? , ? , GeomFromEWKT(?) )";
+    final String insertIntoSql = "INSERT INTO stop ( route_id ,  stop_order , passenger , point_name , point ) " +
+            " VALUES ( ? , ? , ? , ? , GeomFromEWKT(?) )";
     for(final Stop stop : stops ){
       stop.setRouteId( route.getId() );
       KeyHolder keyHolder = new GeneratedKeyHolder();
-      jdbcTemplate.update(
-              new PreparedStatementCreator() {
-                public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                  PreparedStatement ps = con.prepareStatement(insertIntoSql, new String[]{"id"});
-                  ps.setLong(1, stop.getRouteId() );
-                  ps.setInt(2, stop.getOrder() );
-                  ps.setString(3, stop.getPassenger());
-                  ps.setString(4, stop.getPoint().toGeom());
-                  return ps;
-                }
-              }, keyHolder);
+      jdbcTemplate.update( con -> {
+                PreparedStatement ps = con.prepareStatement(insertIntoSql, new String[]{"id"});
+                ps.setLong(1, stop.getRouteId() );
+                ps.setInt(2, stop.getOrder() );
+                ps.setString(3, stop.getPassenger());
+                ps.setString(4, stop.getPointName());
+                ps.setString(5, stop.getPoint().toGeom());
+                return ps;
+              }, keyHolder );
       stop.setId(keyHolder.getKey().longValue() );
     }
   }
@@ -170,11 +161,13 @@ public class RouteService {
   protected Route mountRoute(ResultSet rs) throws SQLException {
     Route r = new Route();
     r.setId( rs.getLong("id") );
-    r.setDate( rs.getDate("date") );
-    r.setCreatedAt( rs.getDate("created_at") );
-    r.setDriver( mountDriver(rs) );
+    r.setDate(rs.getDate("date"));
+    r.setCreatedAt(rs.getDate("created_at"));
+    r.setDriver(mountDriver(rs));
     r.setStartingLocation( mountLocation( rs , "start_" ) );
     r.setEndingLocation(mountLocation(rs, "ending_" ) );
+    r.setRouteJson( rs.getString("route_json") );
+    r.setStops( mountStops( r ) );
     return r;
   }
 
@@ -195,5 +188,24 @@ public class RouteService {
     return location;
   }
 
+  protected List<Stop> mountStops(Route route)  throws SQLException{
+    final List<Stop> stops = new ArrayList<>();
+    final String sql = "SELECT s.* FROM stop s WHERE s.route_id = ? ORDER BY stop_order ASC";
+    jdbcTemplate.query(sql, new Object[]{route.getId()}, (RowCallbackHandler) (ResultSet rs ) -> {
+        stops.add( mountStop( rs ) );
+    });
+    return stops;
+  }
+
+  protected Stop mountStop(ResultSet rs) throws SQLException {
+    Stop s = new Stop();
+    s.setId( rs.getLong("id") );
+    s.setPassenger( rs.getString("passenger") );
+    s.setPointName(rs.getString("point_name") );
+    s.setGeom( (PGgeometry) rs.getObject( "point") );
+    s.setOrder(  rs.getInt( "stop_order" ) );
+    s.setPoint( new Point( s.getGeom() ) );
+    return s;
+  }
 
 }

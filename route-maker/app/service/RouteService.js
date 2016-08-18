@@ -9,9 +9,7 @@ angular.module(moduleName).service("RouteService" , [
     };
 
     self.get = function (id, callback) {
-      Routes.get({id: id}, function success(data) {
-        callback(data);
-      });
+      return Routes.get({id: id});
     }
 
     self.query = function (filter, callback) {

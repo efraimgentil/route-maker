@@ -10,6 +10,7 @@ public class Stop {
 
   private Long id;
   private Long routeId;
+  private String pointName;
   private Integer order;
   private String passenger;
 
@@ -67,20 +68,22 @@ public class Stop {
   public void setPoint(Point point) {
     this.point = point;
   }
-
   public Long getRouteId() {
     return routeId;
   }
-
   public void setRouteId(Long routeId) {
     this.routeId = routeId;
   }
-
   public Integer getOrder() {
     return order;
   }
-
   public void setOrder(Integer order) {
     this.order = order;
+  }
+  public String getPointName() {
+    return pointName;
+  }
+  public void setPointName(String pointName) {
+    this.pointName = pointName;
   }
 }
