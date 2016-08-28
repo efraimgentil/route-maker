@@ -3,8 +3,8 @@
   <page-title-directive title="View Route"></page-title-directive>
 
   <div >
-    <form name="form" ng-submit="save()" novalidate="novalidate">
-      <div class="row">
+    <form id="formViewRoute" name="form"  novalidate="novalidate">
+      <div class="row fields">
         <div class="form-group col-lg-3 col-md-4 col-sm-6 col-xs-12">
           <label>Date</label>
           <input id="date" name="date" type="datetime-local"  ng-model="route.date"
@@ -47,7 +47,7 @@
       </div>
 
       <div class="form-group">
-        <button class="btn btn-success btn-sm" type="submit" >Print</button>
+        <button class="btn btn-success btn-sm" ng-click="print()" >Print</button>
         <button class="btn btn-danger btn-sm" ng-click="cancel()">Cancel</button>
       </div>
     </form>
