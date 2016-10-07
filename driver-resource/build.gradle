@@ -5,6 +5,20 @@ apply plugin: 'war'
 sourceCompatibility = 1.8
 version = '1.0'
 
+sourceSets {
+    itest {
+        java.srcDir file('src/itest/java')
+        resources.srcDir file('src/itest/resources')
+    }
+}
+
+task integTest(type: Test) {
+    testClassesDir = sourceSets.itest.output.classesDir
+    classpath = sourceSets.itest.runtimeClasspath
+}
+
+check.dependsOn integTest
+
 buildscript {
     repositories {
         maven { url 'http://repo.spring.io/plugins-release' }
@@ -37,4 +51,9 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.springframework', name: 'spring-test', version: '4.0.9.RELEASE'
     testCompile group: 'org.mockito' , name: 'mockito-all' , version: '1.9.5'
+
+    itestCompile sourceSets.main.output
+    itestCompile configurations.testCompile
+    itestCompile sourceSets.test.output
+    itestRuntime configurations.testRuntime
 }

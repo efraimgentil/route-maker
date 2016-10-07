@@ -5,6 +5,7 @@ import me.efraimgentil.config.SpringConfig;
 import me.efraimgentil.model.Driver;
 import me.efraimgentil.model.Location;
 import me.efraimgentil.model.Point;
+import me.efraimgentil.service.DriverService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

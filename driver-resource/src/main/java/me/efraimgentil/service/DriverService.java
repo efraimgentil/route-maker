@@ -39,7 +39,7 @@ public class DriverService {
   @Transactional(propagation = Propagation.NOT_SUPPORTED)
   public List<Driver> drivers(){
     final List<Driver> drivers = new ArrayList<>();
-    jdbcTemplate.query("SELECT * FROM driver", new Object[]{}, new RowCallbackHandler() {
+    jdbcTemplate.query("SELECT * FROM rm.driver", new Object[]{}, new RowCallbackHandler() {
       @Override
       public void processRow(ResultSet rs) throws SQLException {
         drivers.add( mountDriver( rs ) );
@@ -51,7 +51,7 @@ public class DriverService {
   @Transactional(propagation = Propagation.NOT_SUPPORTED)
   public Driver get(Integer id) {
     try {
-      return jdbcTemplate.queryForObject("SELECT * FROM public.driver WHERE id = ?", new Object[]{id}, new RowMapper<Driver>() {
+      return jdbcTemplate.queryForObject("SELECT * FROM rm.driver WHERE id = ?", new Object[]{id}, new RowMapper<Driver>() {
         public Driver mapRow(ResultSet rs, int rowNum) throws SQLException {
           Driver driver = mountDriver(rs);
           driver.setHome( getLocation( driver.getLocationId() ) );
@@ -66,7 +66,7 @@ public class DriverService {
   @Transactional(propagation = Propagation.NOT_SUPPORTED)
   public Location getLocation(int id) {
     try {
-      Location location = jdbcTemplate.queryForObject("SELECT * FROM public.location WHERE id = ?", new Object[]{id}, new RowMapper<Location>() {
+      Location location = jdbcTemplate.queryForObject("SELECT * FROM rm.location WHERE id = ?", new Object[]{id}, new RowMapper<Location>() {
         public Location mapRow(ResultSet rs, int rowNum) throws SQLException {
           return mountLocation(rs);
         }
@@ -80,7 +80,7 @@ public class DriverService {
   @Transactional(propagation = Propagation.REQUIRED )
   public Driver create(final Driver driver){
     driver.setHome(insertAndRetriveLocation(driver));
-    final String insertIntoSql = "INSERT INTO public.driver ( name , location_id  ) VALUES ( ? , ?  )";
+    final String insertIntoSql = "INSERT INTO rm.driver ( name , home_location_id  ) VALUES ( ? , ?  )";
     KeyHolder keyHolder = new GeneratedKeyHolder();
     jdbcTemplate.update(
             new PreparedStatementCreator() {
@@ -97,7 +97,7 @@ public class DriverService {
 
   private Location insertAndRetriveLocation(final Driver driver) {
     final int locationId = jdbcTemplate.queryForInt("select nextval('location_id_seq')");
-    final String insertIntoSql = "INSERT INTO public.location ( name , point , point_name , private  , id ) VALUES ( ? , GeomFromEWKT(?)  , ? , ? , ?)";
+    final String insertIntoSql = "INSERT INTO rm.location ( name , point , point_name , private  , id ) VALUES ( ? , GeomFromEWKT(?)  , ? , ? , ?)";
     final Location home = driver.getHome();
     jdbcTemplate.update(insertIntoSql, ( driver.getName() + "'s Home" ) ,  home.getPoint().toGeom() , home.getPointName() , true , locationId  );
     home.setId( locationId );
@@ -110,11 +110,11 @@ public class DriverService {
     if(home.getId() == null){
       driver.setHome(insertAndRetriveLocation(driver));
     }else {
-      String updateLocation = "UPDATE public.location SET name = ? , point = GeomFromEWKT(?) , point_name = ?  WHERE id = ?";
+      String updateLocation = "UPDATE rm.location SET name = ? , point = GeomFromEWKT(?) , point_name = ?  WHERE id = ?";
       int update1 = jdbcTemplate.update(updateLocation, (driver.getName() + "'s Home"), home.getPoint().toGeom(), home.getPointName(), home.getId());
       if(update1 <= 0 ) throw new NotFoundException();
     }
-    String updateDriver = "UPDATE public.driver SET name = ? , location_id = ? WHERE id = ?";
+    String updateDriver = "UPDATE rm.driver SET name = ? , location_id = ? WHERE id = ?";
     int update = jdbcTemplate.update(updateDriver, driver.getName(), driver.getHome().getId() , driver.getId());
     if( update <= 0) throw new NotFoundException();
     return driver;
@@ -123,7 +123,7 @@ public class DriverService {
   @Transactional(propagation = Propagation.REQUIRED )
   public Driver delete(Integer id){
     Driver driver = get(id);
-    jdbcTemplate.update("DELETE FROM driver WHERE id = ?" , id );
+    jdbcTemplate.update("DELETE FROM rm.driver WHERE id = ?" , id );
     return driver;
   }
 
