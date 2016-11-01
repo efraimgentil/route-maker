@@ -5,6 +5,28 @@ apply plugin: 'war'
 sourceCompatibility = 1.8
 version = '1.0'
 
+test {
+    String testType = System.properties['test.type']
+    if (testType == 'integration') {
+        include '**/*IT.*'
+        include '**/*IntegrationSpec.*'
+    } else if (testType == 'unit') {
+        include '**/*Test.*'
+        include '**/*Spec.*'
+        exclude '**/*IT.*'
+        exclude '**/*IntegrationSpec.*'
+    } else if (testType == 'all') {
+        include '**/*Test.*'
+        include '**/*Spec.*'
+    } else {
+        //Default to unit
+        include '**/*Test.*'
+        include '**/*Spec.*'
+        exclude '**/*IT.*'
+        exclude '**/*IntegrationSpec.*'
+    }
+}
+
 sourceSets {
     itest {
         java.srcDir file('src/itest/java')
@@ -12,12 +34,14 @@ sourceSets {
     }
 }
 
-task integTest(type: Test) {
+task integTest(type: Test )  {
     testClassesDir = sourceSets.itest.output.classesDir
     classpath = sourceSets.itest.runtimeClasspath
 }
 
 check.dependsOn integTest
+
+
 
 buildscript {
     repositories {
@@ -33,20 +57,19 @@ repositories {
 }
 
 dependencies {
-    provided  group: 'javax.servlet' , name: 'javax.servlet-api', version: '3.1.0'
-    compile group: "org.springframework.security.oauth", name: 'spring-security-oauth2' , version: '2.0.10.RELEASE'
-    compile group: "org.springframework.security" , name:"spring-security-jwt" , version: "1.0.0.RELEASE"
+    provided group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+    compile group: "org.springframework.security.oauth", name: 'spring-security-oauth2', version: '2.0.10.RELEASE'
+    compile group: "org.springframework.security", name: "spring-security-jwt", version: "1.0.0.RELEASE"
     compile group: 'org.springframework', name: 'spring-webmvc', version: '4.3.1.RELEASE'
     compile group: 'org.springframework', name: 'spring-jdbc', version: '4.0.9.RELEASE'
     compile group: 'org.springframework', name: 'spring-tx', version: '4.0.9.RELEASE'
 
-    compile group:"com.fasterxml.jackson.core", name: 'jackson-core' , version: '2.6.1'
-    compile group:"com.fasterxml.jackson.core", name: 'jackson-databind' , version: '2.6.1'
+    compile group: "com.fasterxml.jackson.core", name: 'jackson-core', version: '2.6.1'
+    compile group: "com.fasterxml.jackson.core", name: 'jackson-databind', version: '2.6.1'
 
     compile group: 'com.zaxxer', name: 'HikariCP', version: '2.3.8'
     compile group: 'org.postgresql', name: 'postgresql', version: '9.4-1201-jdbc41'
     compile group: 'net.postgis', name: 'postgis-jdbc', version: '2.2.0'
-
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.springframework', name: 'spring-test', version: '4.0.9.RELEASE'
